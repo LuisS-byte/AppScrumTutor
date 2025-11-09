@@ -1,6 +1,8 @@
 package sv.edu.catolica.appscrumtutor;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,5 +22,16 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
+    }
+
+    public void Simulado(View view) {
+
+        // Simulación de login correcto
+        Intent intent = new Intent(this, ProyectosActivity.class);
+        startActivity(intent);
+        finish(); // opcional: evita volver al login con "back"
+
     }
 }
