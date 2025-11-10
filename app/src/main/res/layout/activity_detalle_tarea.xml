@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:id="@+id/main"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Título -->
+        <TextView
+            android:id="@+id/tvTituloTarea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Título de la tarea"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="#222"
+            android:paddingBottom="8dp" />
+
+        <!-- Descripción -->
+        <TextView
+            android:id="@+id/tvDescripcionTarea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Descripción completa de la tarea"
+            android:textSize="15sp"
+            android:textColor="#555"
+            android:paddingBottom="12dp" />
+
+        <!-- Datos básicos -->
+        <TextView
+            android:id="@+id/tvResponsable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="👤 Asignado a: -"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tvEstado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📌 Estado: -"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tvFechaLimite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📅 Fecha límite: -"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tvHistoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🧩 Historia relacionada: -"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tvSprint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🏁 Sprint: -"
+            android:paddingBottom="16dp" />
+
+        <!-- Botones -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/btnEditarTarea"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Editar"
+                android:backgroundTint="@android:color/holo_blue_dark"
+                android:textColor="#FFF"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnEliminarTarea"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Eliminar"
+                android:backgroundTint="@android:color/holo_red_dark"
+                android:textColor="#FFF" />
+        </LinearLayout>
+
+        <!-- Comentarios -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Comentarios"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:paddingTop="20dp"
+            android:paddingBottom="8dp" />
+
+        <LinearLayout
+            android:id="@+id/layoutComentarios"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <EditText
+            android:id="@+id/etNuevoComentario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Escribir comentario..."
+            android:layout_marginTop="12dp"
+            android:padding="10dp"
+            android:background="@android:drawable/edit_text" />
+
+        <Button
+            android:id="@+id/btnAgregarComentario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Agregar comentario"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@android:color/holo_green_dark"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
+</ScrollView>

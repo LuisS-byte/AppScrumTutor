@@ -44,6 +44,9 @@ public class ProyectoDetalleActivity extends AppCompatActivity {
 
          tabLayout = findViewById(R.id.tabLayout);
          viewPager = findViewById(R.id.viewPager);
+        TextView tvSprintTitle = findViewById(R.id.tvSprintTitle);
+
+        tvSprintTitle.setText("Sprint actual: Módulo Autenticación"); // después lo harás dinámico
 
         // Recuperar datos del Intent
         String nombreProyecto = getIntent().getStringExtra("nombreProyecto");
@@ -57,6 +60,7 @@ public class ProyectoDetalleActivity extends AppCompatActivity {
 
         // Asignar el adaptador que controla los Fragments
         viewPager.setAdapter(new ProjectPagerAdapter(this));
+        viewPager.setUserInputEnabled(false);
 
         // Sincronizar las pestañas con los fragments
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {

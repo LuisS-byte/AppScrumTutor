@@ -76,7 +76,7 @@ public class ProyectosActivity extends AppCompatActivity {
 
         tvNombre.setText(nombre);
         tvDesc.setText(descripcion);
-        btnIr.setOnClickListener(v -> {Intent intent = new Intent(this, ProyectoDetalleActivity.class);
+        btnIr.setOnClickListener(v -> {Intent intent = new Intent(this, SprintsActivity.class);
         intent.putExtra("nombreProyecto", nombre);
         intent.putExtra("descripcionProyecto", descripcion);
         // En el futuro aquí también enviarás el idProyecto (para el backend)
