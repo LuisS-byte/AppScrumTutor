@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppScrumTutor">
         <activity
+            android:name=".GestionarSprintActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DetalleHistoriasActivity"
+            android:exported="false" />
+        <activity
             android:name=".DetalleTareaActivity"
             android:exported="false" />
         <activity
@@ -26,7 +32,6 @@
         <activity
             android:name=".ProyectoDetalleActivity"
             android:exported="false" />
-
         <activity
             android:name=".ProyectosActivity"
             android:exported="false" />

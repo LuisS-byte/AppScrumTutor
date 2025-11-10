@@ -17,6 +17,10 @@ import androidx.core.view.WindowInsetsCompat;
 public class SprintsActivity extends AppCompatActivity {
 
     private LinearLayout layoutSprints;
+
+    // En el futuro este valor vendrá del rol del usuario logueado (Product Owner, etc.)
+    private boolean esProductOwner = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +31,19 @@ public class SprintsActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
+
         layoutSprints = findViewById(R.id.layoutSprints);
+        Button btnCrearSprint = findViewById(R.id.btnCrearSprint);
+        // Solo mostrar botón crear si el usuario tiene permisos
+        //btnCrearSprint.setVisibility(esProductOwner ? View.VISIBLE : View.GONE);
+
+        btnCrearSprint.setOnClickListener(v -> {
+            // Ir a la misma activity para CREAR un sprint
+            Intent intent = new Intent(this, GestionarSprintActivity.class);
+            startActivity(intent);
+        });
 
         // Simulamos obtener sprints del proyecto
         String[][] sprints = {
@@ -47,17 +63,32 @@ public class SprintsActivity extends AppCompatActivity {
         TextView tvEstado = view.findViewById(R.id.tvEstado);
         TextView tvFechas = view.findViewById(R.id.tvFechas);
         Button btnVer = view.findViewById(R.id.btnVerSprint);
+        Button btnEditar = view.findViewById(R.id.btnEditarSprint); // nuevo botón
 
         tvNombre.setText(nombre);
         tvEstado.setText(estado);
         tvFechas.setText("📅 " + inicio + " → " + fin);
 
+        // Ver sprint → abre detalle del proyecto con los tabs
         btnVer.setOnClickListener(v -> {
             Intent intent = new Intent(this, ProyectoDetalleActivity.class);
             intent.putExtra("nombreSprint", nombre);
             startActivity(intent);
         });
 
+        // Editar sprint → abre activity de gestión
+        btnEditar.setOnClickListener(v -> {
+            Intent intent = new Intent(this, GestionarSprintActivity.class);
+            intent.putExtra("editar", true);
+            intent.putExtra("nombre", nombre);
+            intent.putExtra("estado", estado);
+            intent.putExtra("inicio", inicio);
+            intent.putExtra("fin", fin);
+            intent.putExtra("objetivo", "Objetivo pendiente de cargar");
+            startActivity(intent);
+        });
+        // Mostrar botón editar solo a Product Owner o Scrum Master
+        //btnEditar.setVisibility(esProductOwner ? View.VISIBLE : View.GONE);
         layoutSprints.addView(view);
     }
 }

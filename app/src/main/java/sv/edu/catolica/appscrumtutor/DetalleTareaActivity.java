@@ -1,5 +1,6 @@
 package sv.edu.catolica.appscrumtutor;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -58,23 +59,43 @@ public class DetalleTareaActivity extends AppCompatActivity {
         btnEditar = findViewById(R.id.btnEditarTarea);
         btnEliminar = findViewById(R.id.btnEliminarTarea);
 
-        // Cargar datos simulados (mock)
-        tvTitulo.setText("Diseñar login");
-        tvDescripcion.setText("Crear la interfaz XML y conectar con el backend");
-        tvResponsable.setText("👤 Asignado a: José");
-        tvEstado.setText("📌 Estado: En Progreso");
-        tvFechaLimite.setText("📅 2025-11-15");
+
+        // === Cargar datos del intent (mock o reales) ===
+        String titulo = getIntent().getStringExtra("titulo");
+        String descripcion = getIntent().getStringExtra("descripcion");
+        String responsable = getIntent().getStringExtra("responsable");
+        String estado = getIntent().getStringExtra("estado");
+        String fecha = getIntent().getStringExtra("fecha");
+
+
+        tvTitulo.setText(titulo != null ? titulo : "Diseñar login");
+        tvDescripcion.setText(descripcion != null ? descripcion : "Crear la interfaz XML y conectar con el backend");
+        tvResponsable.setText("👤 Asignado a: " + (responsable != null ? responsable : "José"));
+        tvEstado.setText("📌 Estado: " + (estado != null ? estado : "En Progreso"));
+        tvFechaLimite.setText("📅 Fecha límite: " + (fecha != null ? fecha : "2025-11-15"));
         tvHistoria.setText("🧩 Historia: Módulo de autenticación");
         tvSprint.setText("🏁 Sprint 1");
 
+        // === Botones principales ===
+        btnEditar.setOnClickListener(v -> {
+            Intent intent = new Intent(this, CrearTareaActivity.class);
+            intent.putExtra("modo", "editar");
+            intent.putExtra("titulo", titulo);
+            intent.putExtra("descripcion", descripcion);
+            intent.putExtra("fecha", fecha);
+            intent.putExtra("responsable", responsable);
+            startActivity(intent);
+        });
         // Botones de acción (simulados)
-        btnEditar.setOnClickListener(v -> Toast.makeText(this, "Editar tarea (mock)", Toast.LENGTH_SHORT).show());
+
         btnEliminar.setOnClickListener(v -> Toast.makeText(this, "Eliminar tarea (mock)", Toast.LENGTH_SHORT).show());
 
         btnAgregarComentario.setOnClickListener(v -> {
             String comentario = etNuevoComentario.getText().toString().trim();
-            if (comentario.isEmpty()) return;
-
+            if (comentario.isEmpty()) {
+                Toast.makeText(this, "Comentario vacío", Toast.LENGTH_SHORT).show();
+                return;
+            }
             agregarComentario("Tú", comentario);
             etNuevoComentario.setText("");
         });
@@ -83,8 +104,10 @@ public class DetalleTareaActivity extends AppCompatActivity {
 
 
 
-
     }
+
+
+    /** Agrega visualmente un comentario al contenedor */
     private void agregarComentario(String usuario, String texto) {
         TextView comentarioView = new TextView(this);
         comentarioView.setText("💬 " + usuario + ": " + texto);
@@ -92,6 +115,5 @@ public class DetalleTareaActivity extends AppCompatActivity {
         comentarioView.setTextColor(0xFF333333);
         layoutComentarios.addView(comentarioView);
     }
-
 
 }

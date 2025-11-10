@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
     app:cardCornerRadius="10dp"
-    app:cardElevation="3dp">
+    app:cardElevation="3dp"
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,14 +14,17 @@
         android:orientation="vertical"
         android:padding="12dp">
 
+        <!-- Nombre del Sprint -->
         <TextView
             android:id="@+id/tvNombreSprint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sprint 1"
             android:textStyle="bold"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="#000000" />
 
+        <!-- Estado -->
         <TextView
             android:id="@+id/tvEstado"
             android:layout_width="wrap_content"
@@ -29,6 +33,7 @@
             android:textColor="#4CAF50"
             android:paddingTop="4dp" />
 
+        <!-- Fechas -->
         <TextView
             android:id="@+id/tvFechas"
             android:layout_width="wrap_content"
@@ -38,13 +43,32 @@
             android:textSize="13sp"
             android:paddingTop="4dp" />
 
-        <Button
-            android:id="@+id/btnVerSprint"
-            android:layout_width="wrap_content"
+        <!-- Botones de acción -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
             android:layout_marginTop="8dp"
-            android:text="Ver Sprint"
-            android:backgroundTint="@android:color/holo_blue_dark"
-            android:textColor="#FFFFFF"/>
+            android:divider="?android:attr/dividerHorizontal"
+            android:showDividers="middle"
+            android:dividerPadding="8dp">
+
+            <Button
+                android:id="@+id/btnVerSprint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ver Sprint"
+                android:backgroundTint="@android:color/holo_blue_dark"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/btnEditarSprint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Editar"
+                android:backgroundTint="@android:color/holo_orange_dark"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

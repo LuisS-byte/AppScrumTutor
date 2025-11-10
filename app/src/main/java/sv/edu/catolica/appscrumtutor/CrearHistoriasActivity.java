@@ -17,6 +17,8 @@ public class CrearHistoriasActivity extends AppCompatActivity {
     private Spinner spPrioridad;
     private Button btnGuardarHistoria;
 
+    private boolean modoEdicion = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,21 +36,41 @@ public class CrearHistoriasActivity extends AppCompatActivity {
         spPrioridad = findViewById(R.id.spPrioridad);
         btnGuardarHistoria = findViewById(R.id.btnGuardarHistoria);
 
-        btnGuardarHistoria.setOnClickListener(v -> {
-            String titulo = etTitulo.getText().toString().trim();
-            String desc = etDescripcion.getText().toString().trim();
-            String criterios = etCriterios.getText().toString().trim();
-            String prioridad = spPrioridad.getSelectedItem().toString();
 
-            if (titulo.isEmpty() || desc.isEmpty()) {
-                Toast.makeText(this, "Completa los campos obligatorios", Toast.LENGTH_SHORT).show();
-                return;
-            }
 
-            Toast.makeText(this, "Historia creada (mock): " + titulo, Toast.LENGTH_SHORT).show();
-            finish();
-
-        });
+        if (getIntent().hasExtra("modo") && getIntent().getStringExtra("modo").equals("editar")) {
+            modoEdicion = true;
+            precargarDatos();
+            btnGuardarHistoria.setText("GUARDAR CAMBIOS");
+        }
+        btnGuardarHistoria.setOnClickListener(v -> guardarHistoria());
 
     }
+    private void precargarDatos() {
+        etTitulo.setText(getIntent().getStringExtra("titulo"));
+        etDescripcion.setText(getIntent().getStringExtra("descripcion"));
+        etCriterios.setText(getIntent().getStringExtra("criterios"));
+        // Puedes seleccionar la prioridad en el spinner si quisieras
+    }
+
+    private void guardarHistoria() {
+        String titulo = etTitulo.getText().toString().trim();
+        String desc = etDescripcion.getText().toString().trim();
+        String criterios = etCriterios.getText().toString().trim();
+        String prioridad = spPrioridad.getSelectedItem().toString();
+
+        if (titulo.isEmpty() || desc.isEmpty()) {
+            Toast.makeText(this, "Completa los campos obligatorios", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (modoEdicion) {
+            Toast.makeText(this, "Historia actualizada (mock): " + titulo, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Historia creada (mock): " + titulo, Toast.LENGTH_SHORT).show();
+        }
+
+        finish();
+    }
+
 }

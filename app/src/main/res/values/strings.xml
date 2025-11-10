@@ -12,6 +12,13 @@
         <item>En Progreso</item>
         <item>Completada</item>
     </string-array>
+    
+    
+    <string-array name="estado_sprint">
+        <item>Planificado</item>
+        <item>Activo</item>
+        <item>Completado</item>
+    </string-array>
 
 
 </resources>
