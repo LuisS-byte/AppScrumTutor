@@ -28,7 +28,7 @@ public class ProyectosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_proyectos);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+           ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -49,6 +49,21 @@ public class ProyectosActivity extends AppCompatActivity {
 
         String[][] proyectos = {
                 {"Reservation Proyect", "Programa para gestión de reservas."},
+                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
+                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
+                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
+                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
+                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
+                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
+                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
+                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
+                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
+                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
+                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
+                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
+                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
+                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
+                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
                 {"ControlDoc", "Gestión de documentos y archivos empresariales."}
         };
 
