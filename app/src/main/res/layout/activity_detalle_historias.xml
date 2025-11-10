@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Título principal -->
+        <TextView
+            android:id="@+id/tvTituloHistoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Historia de Usuario"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:textColor="#222"
+            android:paddingBottom="12dp" />
+
+        <!-- Descripción -->
+        <TextView
+            android:id="@+id/tvDescripcionHistoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Descripción detallada de la historia."
+            android:textSize="16sp"
+            android:textColor="#444"
+            android:paddingBottom="16dp" />
+
+        <!-- Prioridad -->
+        <TextView
+            android:id="@+id/tvPrioridad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Prioridad: Alta"
+            android:textSize="16sp"
+            android:textColor="#1E88E5"
+            android:paddingBottom="8dp" />
+
+        <!-- Estado -->
+        <TextView
+            android:id="@+id/tvEstado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Estado: En progreso"
+            android:textSize="16sp"
+            android:textColor="#388E3C"
+            android:paddingBottom="8dp" />
+
+        <!-- Criterios de aceptación -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Criterios de aceptación"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="#222"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvCriteriosAceptacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• El usuario debe poder iniciar sesión.\n• La contraseña debe ser validada."
+            android:textSize="15sp"
+            android:textColor="#555"
+            android:paddingBottom="16dp" />
+
+        <!-- Botón para editar historia -->
+        <Button
+            android:id="@+id/btnEditarHistoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Editar historia"
+            android:backgroundTint="@android:color/holo_blue_dark"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="20dp" />
+
+    </LinearLayout>
+</ScrollView>

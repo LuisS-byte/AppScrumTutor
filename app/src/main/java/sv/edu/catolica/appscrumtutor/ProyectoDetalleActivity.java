@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -41,9 +42,17 @@ public class ProyectoDetalleActivity extends AppCompatActivity {
             return insets;
         });
 
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+        bottomNav.setSelectedItemId(R.id.nav_projects); // ← marca el botón actual
+
+        HeaderController.setup(this);
+        NavController.setup(this);
 
          tabLayout = findViewById(R.id.tabLayout);
          viewPager = findViewById(R.id.viewPager);
+        TextView tvSprintTitle = findViewById(R.id.tvSprintTitle);
+
+        tvSprintTitle.setText("Sprint actual: Módulo Autenticación"); // después lo harás dinámico
 
         // Recuperar datos del Intent
         String nombreProyecto = getIntent().getStringExtra("nombreProyecto");
@@ -57,6 +66,7 @@ public class ProyectoDetalleActivity extends AppCompatActivity {
 
         // Asignar el adaptador que controla los Fragments
         viewPager.setAdapter(new ProjectPagerAdapter(this));
+        viewPager.setUserInputEnabled(false);
 
         // Sincronizar las pestañas con los fragments
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {

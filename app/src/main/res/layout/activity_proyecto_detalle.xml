@@ -21,6 +21,16 @@
         android:textSize="18sp"
         android:padding="8dp" />
 
+    <TextView
+        android:id="@+id/tvSprintTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sprint actual: Módulo Autenticación"
+        android:textAlignment="center"
+        android:textColor="#666"
+        android:textSize="14sp"
+        android:paddingBottom="8dp" />
+
     <!-- Pestañas -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -42,7 +52,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menu="@menu/button_nav"
+        app:labelVisibilityMode="labeled"
         android:background="#FFFFFF"
+        android:elevation="8dp"
+        android:layout_gravity="bottom"
         app:itemIconTint="@color/black"
         app:itemTextColor="@color/black" />
 </LinearLayout>

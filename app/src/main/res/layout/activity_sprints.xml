@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:padding="16dp">
+    <include layout="@layout/header" />
+    <TextView
+        android:id="@+id/tvTituloProyecto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sprints del proyecto"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:paddingBottom="8dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:ignore="SpeakableTextPresentCheck">
+
+        <LinearLayout
+            android:id="@+id/layoutSprints"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btnCrearSprint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CREAR NUEVO SPRINT"
+        android:backgroundTint="@android:color/holo_blue_dark"
+        android:textColor="#FFFFFF" />
+    <Button
+        android:id="@+id/btnVerMiembros"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GESTIONAR MIEMBROS DEL PROYECTO"
+        android:backgroundTint="@android:color/holo_blue_light"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Menú inferior -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/button_nav"
+        app:labelVisibilityMode="labeled"
+        android:background="#FFFFFF"
+        android:elevation="8dp"
+        android:layout_gravity="bottom"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black" />
+</LinearLayout>

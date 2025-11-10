@@ -34,9 +34,18 @@ public class ProyectosActivity extends AppCompatActivity {
             return insets;
         });
 
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+        bottomNav.setSelectedItemId(R.id.nav_projects); // ← marca el botón actual
+
+        HeaderController.setup(this);
+        NavController.setup(this);
+
+
         layoutProjects = findViewById(R.id.layoutProjects);
         btnCrearProyecto = findViewById(R.id.btnCrearProyecto);
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+
+
+
 
         String[][] proyectos = {
                 {"Reservation Proyect", "Programa para gestión de reservas."},
@@ -54,14 +63,6 @@ public class ProyectosActivity extends AppCompatActivity {
         );
 
 
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_notifications)
-                Toast.makeText(this, "Notificaciones (mock)", Toast.LENGTH_SHORT).show();
-            else if (id == R.id.nav_profile)
-                Toast.makeText(this, "Perfil (mock)", Toast.LENGTH_SHORT).show();
-            return true;
-        });
     }
 
 
@@ -76,7 +77,7 @@ public class ProyectosActivity extends AppCompatActivity {
 
         tvNombre.setText(nombre);
         tvDesc.setText(descripcion);
-        btnIr.setOnClickListener(v -> {Intent intent = new Intent(this, ProyectoDetalleActivity.class);
+        btnIr.setOnClickListener(v -> {Intent intent = new Intent(this, SprintsActivity.class);
         intent.putExtra("nombreProyecto", nombre);
         intent.putExtra("descripcionProyecto", descripcion);
         // En el futuro aquí también enviarás el idProyecto (para el backend)
