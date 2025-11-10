@@ -14,6 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 public class SprintsActivity extends AppCompatActivity {
 
     private LinearLayout layoutSprints;
@@ -32,6 +34,11 @@ public class SprintsActivity extends AppCompatActivity {
             return insets;
         });
 
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+        bottomNav.setSelectedItemId(R.id.nav_projects); // ← marca el botón actual
+
+        HeaderController.setup(this);
+        NavController.setup(this);
 
 
         layoutSprints = findViewById(R.id.layoutSprints);
@@ -42,6 +49,12 @@ public class SprintsActivity extends AppCompatActivity {
         btnCrearSprint.setOnClickListener(v -> {
             // Ir a la misma activity para CREAR un sprint
             Intent intent = new Intent(this, GestionarSprintActivity.class);
+            startActivity(intent);
+        });
+
+        Button btnVerMiembros = findViewById(R.id.btnVerMiembros);
+        btnVerMiembros.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MiembrosActivity.class);
             startActivity(intent);
         });
 

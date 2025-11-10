@@ -1,0 +1,34 @@
+package sv.edu.catolica.appscrumtutor;
+
+import android.os.Bundle;
+import android.widget.TextView;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class DetalleTemaActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_detalle_tema);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        TextView tvTitulo = findViewById(R.id.tvTituloTema);
+        TextView tvContenido = findViewById(R.id.tvContenidoTema);
+
+        String titulo = getIntent().getStringExtra("titulo");
+        String descripcion = getIntent().getStringExtra("descripcion");
+
+        tvTitulo.setText(titulo);
+        tvContenido.setText("Contenido educativo:\n\n" + descripcion + "\n\n(Pronto: videos, ejemplos y quizzes)");
+    }
+}

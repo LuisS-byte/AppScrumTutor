@@ -12,6 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppScrumTutor">
         <activity
+            android:name=".DetalleTemaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LearningActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NotificacionesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MiembrosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PerfilActivity"
+            android:exported="false" />
+        <activity
             android:name=".GestionarSprintActivity"
             android:exported="false" />
         <activity
