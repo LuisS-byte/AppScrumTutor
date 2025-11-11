@@ -17,8 +17,17 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class ProyectosActivity extends AppCompatActivity {
+import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import sv.edu.catolica.appscrumtutor.auth.TokenStore;
+import sv.edu.catolica.appscrumtutor.net.ApiService;
+import sv.edu.catolica.appscrumtutor.net.RetrofitClient;
+import sv.edu.catolica.appscrumtutor.net.dto.ProyectoDto;
+
+public class ProyectosActivity extends AppCompatActivity {
 
     LinearLayout layoutProjects;
     Button btnCrearProyecto;
@@ -28,60 +37,69 @@ public class ProyectosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_proyectos);
-           ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
-        bottomNav.setSelectedItemId(R.id.nav_projects); // ← marca el botón actual
+        bottomNav.setSelectedItemId(R.id.nav_projects);
 
         HeaderController.setup(this);
         NavController.setup(this);
 
-
         layoutProjects = findViewById(R.id.layoutProjects);
         btnCrearProyecto = findViewById(R.id.btnCrearProyecto);
 
-
-
-
-        String[][] proyectos = {
-                {"Reservation Proyect", "Programa para gestión de reservas."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."}
-        };
-
-        if (proyectos.length == 0) {
-            mostrarSinProyectos();
-        } else {
-            for (String[] p : proyectos) agregarProyecto(p[0], p[1]);
+        // ======== 🔑 TOKEN DEL LOGIN =========
+        String token = TokenStore.get(this);
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(this, "⚠️ No hay token, inicia sesión primero", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+            return;
         }
+
+        // Mostrar token solo para verificar (puedes quitar este Toast)
+        Toast.makeText(this, "🔐 Token actual: " + token.substring(0, Math.min(20, token.length())) + "...", Toast.LENGTH_LONG).show();
+
+        // ======== 🔄 CARGAR PROYECTOS DESDE BACKEND =========
+        cargarProyectosDesdeBackend(token);
 
         btnCrearProyecto.setOnClickListener(v ->
                 Toast.makeText(this, "Crear nuevo proyecto (mock)", Toast.LENGTH_SHORT).show()
         );
-
-
     }
 
+    private void cargarProyectosDesdeBackend(String token) {
+        ApiService api = RetrofitClient.get(this).create(ApiService.class);
+        Call<List<ProyectoDto>> call = api.listarMisProyectos("Bearer " + token);
 
+        call.enqueue(new Callback<List<ProyectoDto>>() {
+            @Override
+            public void onResponse(Call<List<ProyectoDto>> call, Response<List<ProyectoDto>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<ProyectoDto> proyectos = response.body();
+                    if (proyectos.isEmpty()) {
+                        mostrarSinProyectos();
+                    } else {
+                        for (ProyectoDto p : proyectos) {
+                            //agregarProyecto(p.getNombre(), p.getDescripcion());
+                        }
+                    }
+                } else {
+                    Toast.makeText(ProyectosActivity.this, "Error cargando proyectos (" + response.code() + ")", Toast.LENGTH_SHORT).show();
+                }
+            }
 
+            @Override
+            public void onFailure(Call<List<ProyectoDto>> call, Throwable t) {
+                Toast.makeText(ProyectosActivity.this, "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private void agregarProyecto(String nombre, String descripcion) {
         View view = LayoutInflater.from(this).inflate(R.layout.item_proyecto, layoutProjects, false);
@@ -92,16 +110,15 @@ public class ProyectosActivity extends AppCompatActivity {
 
         tvNombre.setText(nombre);
         tvDesc.setText(descripcion);
-        btnIr.setOnClickListener(v -> {Intent intent = new Intent(this, SprintsActivity.class);
-        intent.putExtra("nombreProyecto", nombre);
-        intent.putExtra("descripcionProyecto", descripcion);
-        // En el futuro aquí también enviarás el idProyecto (para el backend)
-        startActivity(intent);
-    });
+        btnIr.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SprintsActivity.class);
+            intent.putExtra("nombreProyecto", nombre);
+            intent.putExtra("descripcionProyecto", descripcion);
+            startActivity(intent);
+        });
 
         layoutProjects.addView(view);
     }
-
 
     private void mostrarSinProyectos() {
         TextView msg = new TextView(this);
@@ -111,5 +128,4 @@ public class ProyectosActivity extends AppCompatActivity {
         msg.setGravity(android.view.Gravity.CENTER_HORIZONTAL);
         layoutProjects.addView(msg);
     }
-
 }
