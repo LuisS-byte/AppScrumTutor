@@ -11,37 +11,44 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiClient {
     private static final String BASE_URL = "https://nonimplemental-frowningly-victor.ngrok-free.dev/";
     private static Retrofit retrofit = null;
-
+    private static String lastToken = null;
 
     public static Retrofit getClient(Context context) {
-        // Lee el JWT almacenado localmente
+
         String token = context.getSharedPreferences("ScrumTutorPrefs", Context.MODE_PRIVATE)
                 .getString("jwt", null);
 
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        if (retrofit == null || (token != null && !token.equals(lastToken))) {
+            lastToken = token;
 
-        OkHttpClient.Builder client = new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .addInterceptor(chain -> {
-                    Request.Builder requestBuilder = chain.request().newBuilder();
-                    if (token != null && !token.isEmpty()) {
-                        requestBuilder.addHeader("Authorization", "Bearer " + token);
-                    }
-                    return chain.proceed(requestBuilder.build());
-                });
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        if (retrofit == null) {
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor(logging)
+                    .addInterceptor(chain -> {
+                        Request.Builder builder = chain.request().newBuilder();
+                        if (token != null && !token.isEmpty()) {
+                            builder.addHeader("Authorization", "Bearer " + token);
+                        }
+                        return chain.proceed(builder.build());
+                    })
+                    .build();
+
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .client(client.build())
+                    .client(client)
                     .build();
         }
+
         return retrofit;
     }
 
     public static void clearInstance() {
+
         retrofit = null;
+        lastToken = null;
+
     }
 }

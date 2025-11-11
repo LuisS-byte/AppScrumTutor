@@ -32,6 +32,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import sv.edu.catolica.appscrumtutor.network.AuthResponse;
 import sv.edu.catolica.appscrumtutor.network.AuthService;
+import sv.edu.catolica.appscrumtutor.network.JwtUtils;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "GoogleLogin";
@@ -49,17 +50,27 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
         // Verificar si ya hay sesión guardada
         String savedJwt = getSharedPreferences("ScrumTutorPrefs", MODE_PRIVATE)
                 .getString("jwt", null);
 
-        if (savedJwt != null && !savedJwt.isEmpty()) {
-            Log.d(TAG, "Sesión detectada, saltando login");
+        if (savedJwt != null && !savedJwt.isEmpty() && !JwtUtils.isTokenExpired(savedJwt)) {
+            Log.d(TAG, "Sesión válida detectada, saltando login");
             Intent intent = new Intent(this, ProyectosActivity.class);
             startActivity(intent);
             finish();
             return;
+        } else {
+            // Si el token está expirado o vacío, lo borramos
+            getSharedPreferences("ScrumTutorPrefs", MODE_PRIVATE)
+                    .edit()
+                    .remove("jwt")
+                    .apply();
+            Log.d(TAG, "Token expirado o inválido, pidiendo nuevo login");
         }
+
 
         ImageButton btnGoogle = findViewById(R.id.btnGoogle);
 
@@ -101,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendTokenToBackend(String idToken) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://nonimplemental-frowningly-victor.ngrok-free.dev/") // tu backend expuesto
+                .baseUrl("https://nonimplemental-frowningly-victor.ngrok-free.dev/") //backend expuesto
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -110,21 +121,27 @@ public class MainActivity extends AppCompatActivity {
         body.put("idToken", idToken);
         Call<AuthResponse> call = service.loginWithGoogle(body);
 
-
         call.enqueue(new Callback<AuthResponse>() {
             @Override
             public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     AuthResponse authResponse = response.body();
-                    String jwt = authResponse.getJwt(); // usa getToken(), no getJwt()
+                    String jwt = authResponse.getJwt();
+
                     if (jwt != null && !jwt.isEmpty()) {
-                        saveJwt(jwt);
-                        Log.d(TAG, "JWT guardado: " + jwt);
+                        //Limpia cualquier token anterior y guarda el nuevo
+                        getSharedPreferences("ScrumTutorPrefs", MODE_PRIVATE)
+                                .edit()
+                                .clear()
+                                .putString("jwt", jwt)
+                                .apply();
+
+                        Log.d(TAG, "Nuevo JWT guardado: " + jwt);
                         Toast.makeText(MainActivity.this, "Login exitoso", Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(MainActivity.this, ProyectosActivity.class);
                         startActivity(intent);
-                        finish(); // para no volver al login con "back"
+                        finish(); // evita volver al login
                     } else {
                         Toast.makeText(MainActivity.this, "Token JWT no recibido", Toast.LENGTH_SHORT).show();
                     }
@@ -138,14 +155,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-
-    private void saveJwt(String jwt) {
-        getSharedPreferences("ScrumTutorPrefs", MODE_PRIVATE)
-                .edit()
-                .putString("jwt", jwt)
-                .apply();
     }
 
     public void Simulado(View view) {
