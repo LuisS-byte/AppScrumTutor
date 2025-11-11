@@ -55,9 +55,7 @@ public class ProyectosActivity extends AppCompatActivity {
 
         cargarProyectosDesdeBackend();
 
-        btnCrearProyecto.setOnClickListener(v ->
-                Toast.makeText(this, "Crear nuevo proyecto (mock)", Toast.LENGTH_SHORT).show()
-        );
+
 
 
     }
@@ -135,5 +133,10 @@ public class ProyectosActivity extends AppCompatActivity {
     }
 
 
+    public void CrearProyecto(View view) {
+            Intent intent = new Intent(this, createProyect.class);
+            startActivity(intent);
 
+
+    }
 }
