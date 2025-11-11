@@ -17,6 +17,14 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
+import sv.edu.catolica.appscrumtutor.network.ApiClient;
+import sv.edu.catolica.appscrumtutor.proyecto.Proyecto;
+import sv.edu.catolica.appscrumtutor.proyecto.ProyectoService;
+
 public class ProyectosActivity extends AppCompatActivity {
 
 
@@ -45,33 +53,7 @@ public class ProyectosActivity extends AppCompatActivity {
         btnCrearProyecto = findViewById(R.id.btnCrearProyecto);
 
 
-
-
-        String[][] proyectos = {
-                {"Reservation Proyect", "Programa para gestión de reservas."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."},
-                {"ControlDoc", "Gestión de documentos y archivos empresariales."}
-        };
-
-        if (proyectos.length == 0) {
-            mostrarSinProyectos();
-        } else {
-            for (String[] p : proyectos) agregarProyecto(p[0], p[1]);
-        }
+        cargarProyectosDesdeBackend();
 
         btnCrearProyecto.setOnClickListener(v ->
                 Toast.makeText(this, "Crear nuevo proyecto (mock)", Toast.LENGTH_SHORT).show()
@@ -79,7 +61,6 @@ public class ProyectosActivity extends AppCompatActivity {
 
 
     }
-
 
 
 
@@ -93,13 +74,54 @@ public class ProyectosActivity extends AppCompatActivity {
         tvNombre.setText(nombre);
         tvDesc.setText(descripcion);
         btnIr.setOnClickListener(v -> {Intent intent = new Intent(this, SprintsActivity.class);
-        intent.putExtra("nombreProyecto", nombre);
-        intent.putExtra("descripcionProyecto", descripcion);
-        // En el futuro aquí también enviarás el idProyecto (para el backend)
-        startActivity(intent);
-    });
+            intent.putExtra("nombreProyecto", nombre);
+            intent.putExtra("descripcionProyecto", descripcion);
+            // En el futuro aquí también enviarás el idProyecto (para el backend)
+            startActivity(intent);
+        });
 
         layoutProjects.addView(view);
+    }
+    private void cargarProyectosDesdeBackend() {
+        // Recuperar JWT guardado en SharedPreferences
+        String jwt = getSharedPreferences("ScrumTutorPrefs", MODE_PRIVATE)
+                .getString("jwt", null);
+
+        if (jwt == null || jwt.isEmpty()) {
+            Toast.makeText(this, "Sesión expirada. Inicia sesión de nuevo.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+            return;
+        }
+
+        // Crear servicio
+        ProyectoService service = ApiClient.getClient(this).create(ProyectoService.class);
+
+        service.getMisProyectos().enqueue(new retrofit2.Callback<List<Proyecto>>() {
+            @Override
+            public void onResponse(Call<List<Proyecto>> call,
+                                   Response<List<Proyecto>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<sv.edu.catolica.appscrumtutor.proyecto.Proyecto> proyectos = response.body();
+                    layoutProjects.removeAllViews();
+
+                    if (proyectos.isEmpty()) {
+                        mostrarSinProyectos();
+                    } else {
+                        for (sv.edu.catolica.appscrumtutor.proyecto.Proyecto p : proyectos) {
+                            agregarProyecto(p.getNombre(), p.getDescripcion());
+                        }
+                    }
+                } else {
+                    Toast.makeText(ProyectosActivity.this, "Error al cargar proyectos", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<sv.edu.catolica.appscrumtutor.proyecto.Proyecto>> call, Throwable t) {
+                Toast.makeText(ProyectosActivity.this, "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
@@ -111,5 +133,7 @@ public class ProyectosActivity extends AppCompatActivity {
         msg.setGravity(android.view.Gravity.CENTER_HORIZONTAL);
         layoutProjects.addView(msg);
     }
+
+
 
 }
