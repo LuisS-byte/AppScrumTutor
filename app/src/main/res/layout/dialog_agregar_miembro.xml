@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/etCorreoMiembro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Correo del miembro"
+        android:inputType="textEmailAddress"
+        android:layout_marginBottom="12dp" />
+
+    <Spinner
+        android:id="@+id/spRolMiembro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp" />
+
+    <Button
+        android:id="@+id/btnConfirmarInvitacion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="INVITAR"
+        android:backgroundTint="@android:color/holo_blue_dark"
+        android:textColor="@android:color/white" />
+</LinearLayout>
