@@ -16,6 +16,9 @@
         android:theme="@style/Theme.AppScrumTutor"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".updateProyect"
+            android:exported="false" />
+        <activity
             android:name=".createProyect"
             android:exported="false" />
         <activity

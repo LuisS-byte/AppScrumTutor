@@ -2,11 +2,13 @@ package sv.edu.catolica.appscrumtutor;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,9 +18,19 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
+import sv.edu.catolica.appscrumtutor.network.ApiClient;
+import sv.edu.catolica.appscrumtutor.sprint.Sprint;
+import sv.edu.catolica.appscrumtutor.sprint.SprintService;
+
 public class SprintsActivity extends AppCompatActivity {
 
     private LinearLayout layoutSprints;
+
+    private long idProyecto = -1; // ← campo global
 
     // En el futuro este valor vendrá del rol del usuario logueado (Product Owner, etc.)
     private boolean esProductOwner = true;
@@ -44,6 +56,7 @@ public class SprintsActivity extends AppCompatActivity {
         layoutSprints = findViewById(R.id.layoutSprints);
         Button btnCrearSprint = findViewById(R.id.btnCrearSprint);
         // Solo mostrar botón crear si el usuario tiene permisos
+
         //btnCrearSprint.setVisibility(esProductOwner ? View.VISIBLE : View.GONE);
 
         btnCrearSprint.setOnClickListener(v -> {
@@ -53,55 +66,95 @@ public class SprintsActivity extends AppCompatActivity {
         });
 
         Button btnVerMiembros = findViewById(R.id.btnVerMiembros);
+
         btnVerMiembros.setOnClickListener(v -> {
             Intent intent = new Intent(this, MiembrosActivity.class);
+            intent.putExtra("idProyecto", idProyecto);
             startActivity(intent);
+
         });
 
-        // Simulamos obtener sprints del proyecto
-        String[][] sprints = {
-                {"Sprint 1", "Finalizado", "01/10", "15/10"},
-                {"Sprint 2", "Activo", "16/10", "31/10"},
-                {"Sprint 3", "Planificado", "01/11", "15/11"}
-        };
 
-        for (String[] s : sprints) agregarSprint(s[0], s[1], s[2], s[3]);
+
+        idProyecto = getIntent().getLongExtra("idProyecto", -1);
+        String nombreProyecto = getIntent().getStringExtra("nombreProyecto");
+
+        if (idProyecto == -1) {
+            Toast.makeText(this, "Error: Proyecto no identificado", Toast.LENGTH_SHORT).show();
+            Log.e("SprintsActivity", "idProyecto inválido (-1)");
+            finish();
+            return;
+        }
+
+        Log.d("SprintsActivity", "idProyecto recibido: " + idProyecto);
+
+
+        TextView tvTituloProyecto = findViewById(R.id.tvTituloProyecto);
+        if (nombreProyecto != null) {
+            tvTituloProyecto.setText("Sprints de " + nombreProyecto);
+        }
+
+        cargarSprintsDesdeBackend(idProyecto);
+    }
+    private void cargarSprintsDesdeBackend(long idProyecto) {
+        SprintService service = ApiClient.getClient(this).create(SprintService.class);
+
+        service.listarPorProyecto(idProyecto).enqueue(new retrofit2.Callback<List<Sprint>>() {
+            @Override
+            public void onResponse(Call<List<Sprint>> call, Response<List<Sprint>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    layoutSprints.removeAllViews();
+                    for (Sprint s : response.body()) {
+                        Log.d("SprintCheck", "Sprint recibido -> id=" + s.getIdSprint()
+                                + ", nombre=" + s.getNombre()
+                                + ", estado=" + s.getEstadoDescripcion());
+                        agregarSprint(s);
+                    }
+                } else {
+                    Toast.makeText(SprintsActivity.this, "No se pudieron cargar los sprints", Toast.LENGTH_SHORT).show();
+                    Log.e("SprintsActivity", "Error HTTP: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Sprint>> call, Throwable t) {
+                Toast.makeText(SprintsActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("SprintsActivity", "Fallo Retrofit", t);
+            }
+        });
     }
 
-
-    private void agregarSprint(String nombre, String estado, String inicio, String fin) {
+    private void agregarSprint(Sprint sprint) {
         View view = LayoutInflater.from(this).inflate(R.layout.item_sprint, layoutSprints, false);
 
         TextView tvNombre = view.findViewById(R.id.tvNombreSprint);
         TextView tvEstado = view.findViewById(R.id.tvEstado);
         TextView tvFechas = view.findViewById(R.id.tvFechas);
         Button btnVer = view.findViewById(R.id.btnVerSprint);
-        Button btnEditar = view.findViewById(R.id.btnEditarSprint); // nuevo botón
 
-        tvNombre.setText(nombre);
-        tvEstado.setText(estado);
-        tvFechas.setText("📅 " + inicio + " → " + fin);
+        tvNombre.setText(sprint.getNombre());
+        tvEstado.setText(sprint.getEstadoDescripcion() != null ? sprint.getEstadoDescripcion() : "Sin estado");
+        tvFechas.setText("📅 " + sprint.getFechaInicio() + " → " + sprint.getFechaFin());
 
-        // Ver sprint → abre detalle del proyecto con los tabs
         btnVer.setOnClickListener(v -> {
+            Log.d("SprintsActivity", "Abriendo ProyectoDetalleActivity con idProyecto=" + idProyecto
+                    + ", idSprint=" + sprint.getIdSprint());
+
             Intent intent = new Intent(this, ProyectoDetalleActivity.class);
-            intent.putExtra("nombreSprint", nombre);
+            intent.putExtra("idProyecto", idProyecto);
+            intent.putExtra("idSprint", sprint.getIdSprint());
+            intent.putExtra("nombreSprint", sprint.getNombre());
+
+            // también pasa el nombre del proyecto
+            String nombreProyecto = getIntent().getStringExtra("nombreProyecto");
+            if (nombreProyecto != null) {
+                intent.putExtra("nombreProyecto", nombreProyecto);
+            }
             startActivity(intent);
+
+
         });
 
-        // Editar sprint → abre activity de gestión
-        btnEditar.setOnClickListener(v -> {
-            Intent intent = new Intent(this, GestionarSprintActivity.class);
-            intent.putExtra("editar", true);
-            intent.putExtra("nombre", nombre);
-            intent.putExtra("estado", estado);
-            intent.putExtra("inicio", inicio);
-            intent.putExtra("fin", fin);
-            intent.putExtra("objetivo", "Objetivo pendiente de cargar");
-            startActivity(intent);
-        });
-        // Mostrar botón editar solo a Product Owner o Scrum Master
-        //btnEditar.setVisibility(esProductOwner ? View.VISIBLE : View.GONE);
         layoutSprints.addView(view);
     }
 }

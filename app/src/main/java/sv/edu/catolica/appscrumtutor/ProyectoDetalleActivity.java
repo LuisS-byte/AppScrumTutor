@@ -1,6 +1,7 @@
 package sv.edu.catolica.appscrumtutor;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -23,6 +24,7 @@ import java.util.List;
 import sv.edu.catolica.appscrumtutor.fragments.ActividadesFragment;
 import sv.edu.catolica.appscrumtutor.fragments.BacklogFrament;
 import sv.edu.catolica.appscrumtutor.fragments.CalendarioFrament;
+import sv.edu.catolica.appscrumtutor.proyectoDetalle.AdapterProyecto;
 
 public class ProyectoDetalleActivity extends AppCompatActivity {
 
@@ -48,27 +50,39 @@ public class ProyectoDetalleActivity extends AppCompatActivity {
         HeaderController.setup(this);
         NavController.setup(this);
 
-         tabLayout = findViewById(R.id.tabLayout);
-         viewPager = findViewById(R.id.viewPager);
+        tabLayout = findViewById(R.id.tabLayout);
+        viewPager = findViewById(R.id.viewPager);
         TextView tvSprintTitle = findViewById(R.id.tvSprintTitle);
+        TextView tvTitulo = findViewById(R.id.tvProjectTitle);
 
-        tvSprintTitle.setText("Sprint actual: Módulo Autenticación"); // después lo harás dinámico
+
+
+
 
         // Recuperar datos del Intent
+        long idProyecto = getIntent().getLongExtra("idProyecto", -1);
+        long idSprint = getIntent().getLongExtra("idSprint", -1);
         String nombreProyecto = getIntent().getStringExtra("nombreProyecto");
-        String descripcionProyecto = getIntent().getStringExtra("descripcionProyecto");
+        String nombreSprint = getIntent().getStringExtra("nombreSprint");
 
-        // Mostrar el nombre arriba
-        TextView tvTitulo = findViewById(R.id.tvProjectTitle);
-        if (nombreProyecto != null) {
+        // --- Mostrar información real ---
+        if (nombreProyecto != null && !nombreProyecto.isEmpty()) {
             tvTitulo.setText(nombreProyecto);
+        } else {
+            tvTitulo.setText("Proyecto sin nombre");
         }
 
-        // Asignar el adaptador que controla los Fragments
-        viewPager.setAdapter(new ProjectPagerAdapter(this));
+        if (nombreSprint != null && !nombreSprint.isEmpty()) {
+            tvSprintTitle.setText("Sprint actual: " + nombreSprint);
+        } else {
+            tvSprintTitle.setText("Sprint actual: N/A");
+        }
+
+        // Configurar adapter
+        viewPager.setAdapter(new AdapterProyecto(this, idProyecto, idSprint));
         viewPager.setUserInputEnabled(false);
 
-        // Sincronizar las pestañas con los fragments
+        // Tabs
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             switch (position) {
                 case 0: tab.setText("Backlog"); break;
@@ -76,27 +90,17 @@ public class ProyectoDetalleActivity extends AppCompatActivity {
                 case 2: tab.setText("Calendario"); break;
             }
         }).attach();
+
+
+        Log.d("ProyectoDetalleActivity",
+                "Recibido idProyecto=" + idProyecto + ", idSprint=" + idSprint +
+                        ", nombreProyecto=" + nombreProyecto + ", nombreSprint=" + nombreSprint);
+
     }
 
-    private static class ProjectPagerAdapter extends FragmentStateAdapter {
-        private final List<Fragment> fragments = new ArrayList<>();
 
-        public ProjectPagerAdapter(@NonNull AppCompatActivity activity) {
-            super(activity);
-            fragments.add(new BacklogFrament());
-            fragments.add(new ActividadesFragment());
-            fragments.add(new CalendarioFrament());
-        }
 
-        @NonNull
-        @Override
-        public Fragment createFragment(int position) {
-            return fragments.get(position);
-        }
 
-        @Override
-        public int getItemCount() {
-            return fragments.size();
-        }
-    }
+
+
 }
