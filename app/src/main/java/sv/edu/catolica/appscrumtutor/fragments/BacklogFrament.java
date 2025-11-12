@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,70 +17,111 @@ import androidx.fragment.app.Fragment;
 import java.util.Arrays;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import sv.edu.catolica.appscrumtutor.CrearHistoriasActivity;
 import sv.edu.catolica.appscrumtutor.DetalleHistoriasActivity;
 import sv.edu.catolica.appscrumtutor.R;
+import sv.edu.catolica.appscrumtutor.network.ApiClient;
+import sv.edu.catolica.appscrumtutor.sprint.Historia;
+import sv.edu.catolica.appscrumtutor.sprint.HistoriaService;
 
 public class BacklogFrament extends Fragment {
 
     private LinearLayout layoutSprintTareas, layoutBacklogTareas;
     private Button btnCrearHistoria;
+    private long idProyecto = -1;
+
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_backlog, container, false);
+        return inflater.inflate(R.layout.fragment_backlog, container, false);
+    }
 
-        // Referencias
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         layoutSprintTareas = view.findViewById(R.id.layoutSprintTareas);
         layoutBacklogTareas = view.findViewById(R.id.layoutBacklogTareas);
         btnCrearHistoria = view.findViewById(R.id.btnCrearHistoria);
 
-        // Historias simuladas (mock)
-        List<String[]> historiasMock = Arrays.asList(
-                new String[]{"Como cliente quiero iniciar sesión", "Para acceder a mi cuenta", "Alta"},
-                new String[]{"Como administrador quiero crear usuarios", "Para gestionar el sistema", "Media"},
-                new String[]{"Como cliente quiero recuperar mi contraseña", "Para volver a acceder", "Baja"}
-        );
-
-        // Agregar al backlog visualmente
-        for (String[] h : historiasMock) {
-            agregarHistoria(layoutBacklogTareas, h[0], h[1], h[2]);
+        if (getArguments() != null) {
+            idProyecto = getArguments().getLong("idProyecto", -1);
         }
 
-        // Botón para crear nueva historia
+        if (idProyecto != -1) {
+            cargarHistoriasDesdeBackend();  // ya es seguro aquí
+        } else {
+            Toast.makeText(requireContext(), "Error: Proyecto no identificado", Toast.LENGTH_SHORT).show();
+        }
+
         btnCrearHistoria.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), CrearHistoriasActivity.class);
+            Intent intent = new Intent(requireActivity(), CrearHistoriasActivity.class);
             intent.putExtra("modo", "crear");
+            intent.putExtra("idProyecto", idProyecto);
             startActivity(intent);
         });
-
-        return view;
     }
 
-    // Método para agregar una historia en pantalla
-    private void agregarHistoria(LinearLayout contenedor, String titulo, String descripcion, String prioridad) {
-        View historiaView = LayoutInflater.from(getContext()).inflate(R.layout.item_historia, contenedor, false);
+    private void cargarHistoriasDesdeBackend() {
+        if (!isAdded() || getContext() == null) return;
+
+        HistoriaService service = ApiClient.getClient(getContext()).create(HistoriaService.class);
+
+        service.listarPorProyecto(idProyecto).enqueue(new Callback<List<Historia>>() {
+            @Override
+            public void onResponse(Call<List<Historia>> call, Response<List<Historia>> response) {
+                if (!isAdded()) return;
+                if (response.isSuccessful() && response.body() != null) {
+                    layoutBacklogTareas.removeAllViews();
+                    for (Historia h : response.body()) {
+                        agregarHistoria(h);
+                    }
+                } else {
+                    Toast.makeText(getContext(), "No se pudieron cargar las historias", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Historia>> call, Throwable t) {
+                if (!isAdded()) return;
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private void agregarHistoria(Historia historia) {
+        if (!isAdded() || getContext() == null) return;
+
+        View historiaView = LayoutInflater.from(getContext())
+                .inflate(R.layout.item_historia, layoutBacklogTareas, false);
 
         TextView tvTitulo = historiaView.findViewById(R.id.tvTituloHistoria);
         TextView tvDescripcion = historiaView.findViewById(R.id.tvDescripcionHistoria);
         TextView tvPrioridad = historiaView.findViewById(R.id.tvPrioridadHistoria);
 
-        tvTitulo.setText(titulo);
-        tvDescripcion.setText(descripcion);
-        tvPrioridad.setText("Prioridad: " + prioridad);
+        tvTitulo.setText(historia.getTitulo());
+        tvDescripcion.setText(historia.getDescripcion());
+        tvPrioridad.setText("Prioridad: " +
+                (historia.getPrioridad() != null ? historia.getPrioridad() : "Sin prioridad"));
 
-        // Navegar al detalle de la historia
         historiaView.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), DetalleHistoriasActivity.class);
-            intent.putExtra("titulo", titulo);
-            intent.putExtra("descripcion", descripcion);
-            intent.putExtra("prioridad", prioridad);
+            intent.putExtra("titulo", historia.getTitulo());
+            intent.putExtra("descripcion", historia.getDescripcion());
+            intent.putExtra("prioridad",
+                    historia.getPrioridad() != null ? historia.getPrioridad() : "N/A");
             startActivity(intent);
         });
 
-        contenedor.addView(historiaView);
+        layoutBacklogTareas.addView(historiaView);
     }
+
 }

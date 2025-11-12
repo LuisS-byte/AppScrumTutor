@@ -13,6 +13,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class PerfilActivity extends AppCompatActivity {
@@ -50,10 +53,33 @@ public class PerfilActivity extends AppCompatActivity {
         btnEditarPerfil.setOnClickListener(v ->
                 Toast.makeText(this, "Editar perfil (mock)", Toast.LENGTH_SHORT).show());
 
-        btnCerrarSesion.setOnClickListener(v -> {
-            Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-        });
+        btnCerrarSesion.setOnClickListener(v -> cerrarSesion());
+
+    }
+
+    private void cerrarSesion() {
+        // 🔹 1. Borrar token JWT guardado
+        getSharedPreferences("ScrumTutorPrefs", MODE_PRIVATE)
+                .edit()
+                .clear()
+                .apply();
+
+        // 🔹 2. Cerrar sesión de Google
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("513694165460-dh23r13rstm014momd7svpn4gveqso6f.apps.googleusercontent.com")
+                .requestEmail()
+                .build();
+
+        GoogleSignIn.getClient(this, gso)
+                .revokeAccess() // 🔥 importante: revoca los permisos, no solo cierra sesión
+                .addOnCompleteListener(task -> {
+                    Toast.makeText(this, "Sesión cerrada correctamente", Toast.LENGTH_SHORT).show();
+
+                    // 3️⃣ Redirigir al login limpiando el historial
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                });
     }
 }
