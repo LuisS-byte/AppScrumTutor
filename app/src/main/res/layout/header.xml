@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="56dp"
+    android:minHeight="60dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:paddingHorizontal="16dp"
-    android:paddingVertical="8dp"
-    android:background="#F8F9FA">
+    android:paddingVertical="10dp"
+    android:background="#043255">
 
     <!-- Barra de búsqueda -->
     <EditText
@@ -15,24 +15,29 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_weight="1"
-        android:hint="Buscar"
-        android:paddingStart="14dp"
-        android:paddingEnd="12dp"
-        android:textSize="16sp"
+        android:background="#FFFFFF"
         android:drawableStart="@android:drawable/ic_menu_search"
         android:drawablePadding="8dp"
-        android:inputType="text"
+        android:hint="Buscar"
         android:imeOptions="actionSearch"
-        android:singleLine="true" />
+        android:inputType="text"
+        android:paddingStart="14dp"
+        android:paddingEnd="12dp"
+        android:singleLine="true"
+        android:textColor="#043255"
+        android:textColorHint="#7A9BB5"
+        android:textSize="15sp" />
 
-    <!-- Icono de perfil -->
+    <!-- Icono perfil -->
     <ImageView
         android:id="@+id/ivPerfil"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
         android:layout_marginStart="12dp"
+        android:background="#F2F7FA"
         android:src="@drawable/ic_launcher_background"
         android:scaleType="centerCrop"
         android:padding="4dp"
-        android:contentDescription="Perfil" />
+        android:contentDescription="Perfil"
+        android:backgroundTint="#F2F7FA" />
 </LinearLayout>

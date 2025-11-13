@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
+    android:layout_marginBottom="12dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="3dp"
-    android:padding="10dp">
+    app:cardElevation="4dp"
+    android:backgroundTint="#FFFFFF"
+    android:padding="14dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,15 +15,17 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <!-- Icono del usuario -->
+        <!-- Avatar -->
         <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_launcher_background"
-            android:contentDescription="Avatar"
-            android:layout_marginEnd="12dp" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_launcher_foreground"
+            android:background="#F2F7FA"
+            android:padding="6dp"
+            android:layout_marginEnd="14dp"
+            android:contentDescription="Avatar" />
 
-        <!-- Info principal -->
+        <!-- Información del miembro -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -35,16 +38,17 @@
                 android:layout_height="wrap_content"
                 android:text="José Mendoza"
                 android:textStyle="bold"
-                android:textSize="16sp"
-                android:textColor="#222" />
+                android:textColor="#043255"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tvRolMiembro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Rol: Scrum Master"
-                android:textColor="#555"
-                android:textSize="14sp" />
+                android:textColor="#3A4F61"
+                android:textSize="14sp"
+                android:paddingTop="3dp" />
 
             <TextView
                 android:id="@+id/tvEstadoMiembro"
@@ -52,10 +56,11 @@
                 android:layout_height="wrap_content"
                 android:text="Activo"
                 android:textColor="#4CAF50"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:paddingTop="3dp" />
         </LinearLayout>
 
-        <!-- Botón eliminar (visible solo si rol actual es Product Owner o Scrum Master) -->
+        <!-- Botón eliminar -->
         <Button
             android:id="@+id/btnEliminarMiembro"
             android:layout_width="wrap_content"
@@ -63,6 +68,6 @@
             android:text="Eliminar"
             android:textColor="#FFFFFF"
             android:textSize="13sp"
-            android:backgroundTint="@android:color/holo_red_dark" />
+            android:backgroundTint="#D32F2F" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

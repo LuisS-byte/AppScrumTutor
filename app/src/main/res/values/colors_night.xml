@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+    <resources>
+        <!-- Colores principales adaptados -->
+        <color name="colorPrimary">#9575CD</color>
+        <color name="colorPrimaryVariant">#7E57C2</color>
+        <color name="colorSecondary">#4FC3F7</color>
+        <color name="colorAccent">#FFD54F</color>
+
+        <!-- Fondo general -->
+        <color name="backgroundLight">#121212</color>
+
+        <!-- Fondo de tarjetas -->
+        <color name="cardBackground">#1E1E1E</color>
+
+        <!-- Texto -->
+        <color name="textPrimary">#FFFFFF</color>
+        <color name="textSecondary">#BDBDBD</color>
+
+        <!-- Bordes -->
+        <color name="divider">#2C2C2C</color>
+    </resources>
+

@@ -7,6 +7,7 @@
     android:background="#FFFFFF"
     android:padding="16dp">
 
+    <!-- TÍTULO -->
     <TextView
         android:id="@+id/tvTituloProyecto"
         android:layout_width="match_parent"
@@ -14,8 +15,10 @@
         android:text="Sprints del proyecto"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:paddingBottom="8dp" />
+        android:textColor="#043255"
+        android:paddingBottom="12dp" />
 
+    <!-- LISTADO -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -25,25 +28,27 @@
             android:id="@+id/layoutSprints"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"/>
+            android:orientation="vertical" />
     </ScrollView>
 
+    <!-- BOTÓN CREAR SPRINT -->
     <Button
         android:id="@+id/btnCrearSprint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="CREAR NUEVO SPRINT"
-        android:backgroundTint="@android:color/holo_blue_dark"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#0A84FF"
+        android:layout_marginTop="8dp" />
 
+    <!-- BOTÓN VER MIEMBROS -->
     <Button
         android:id="@+id/btnVerMiembros"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="GESTIONAR MIEMBROS DEL PROYECTO"
-        android:backgroundTint="@android:color/holo_blue_light"
         android:textColor="#FFFFFF"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp" />
+        android:backgroundTint="#043255"
+        android:layout_marginTop="10dp" />
 
 </LinearLayout>

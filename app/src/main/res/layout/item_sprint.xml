@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="3dp"
-    android:foreground="?attr/selectableItemBackground">
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="4dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="#D5E0E8"
+    android:foreground="?attr/selectableItemBackground"
+    android:backgroundTint="#F2F7FA">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="16dp">
 
         <!-- Nombre del Sprint -->
         <TextView
@@ -20,9 +24,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sprint 1"
+            android:textSize="18sp"
             android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="#000000" />
+            android:textColor="#043255" />
 
         <!-- Estado -->
         <TextView
@@ -31,6 +35,7 @@
             android:layout_height="wrap_content"
             android:text="Activo"
             android:textColor="#4CAF50"
+            android:textSize="14sp"
             android:paddingTop="4dp" />
 
         <!-- Fechas -->
@@ -39,36 +44,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="📅 16/10 - 31/10"
-            android:textColor="#555"
-            android:textSize="13sp"
+            android:textColor="#3A4F61"
+            android:textSize="14sp"
             android:paddingTop="4dp" />
 
-        <!-- Botones de acción -->
+        <!-- Botones -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="end"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:divider="?android:attr/dividerHorizontal"
             android:showDividers="middle"
-            android:dividerPadding="8dp">
+            android:dividerPadding="12dp">
 
             <Button
                 android:id="@+id/btnVerSprint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ver Sprint"
-                android:backgroundTint="@android:color/holo_blue_dark"
-                android:textColor="#FFFFFF" />
+                android:text="VER"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#0A84FF" />
 
             <Button
                 android:id="@+id/btnEditarSprint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Editar"
-                android:backgroundTint="@android:color/holo_orange_dark"
-                android:textColor="#FFFFFF" />
+                android:text="EDITAR"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#043255" />
+
         </LinearLayout>
+
     </LinearLayout>
+
 </com.google.android.material.card.MaterialCardView>

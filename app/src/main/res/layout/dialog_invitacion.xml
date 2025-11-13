@@ -1,48 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="24dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#043255"
+    android:padding="24dp">
 
-    <TextView
-        android:id="@+id/tvTituloInvitacion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Invitación al proyecto"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:paddingBottom="8dp" />
-
-    <TextView
-        android:id="@+id/tvNombreProyectoInvitacion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Proyecto X"
-        android:textSize="16sp"
-        android:paddingBottom="16dp" />
-
+    <!-- CARD -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:padding="20dp"
+        android:elevation="6dp"
+        android:layout_margin="4dp">
 
-        <Button
-            android:id="@+id/btnRechazar"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tvTituloInvitacion"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Rechazar"
-            android:backgroundTint="#E57373"
-            android:textColor="#FFF" />
+            android:text="Invitación al proyecto"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#043255"
+            android:paddingBottom="6dp" />
 
-        <Button
-            android:id="@+id/btnAceptar"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tvNombreProyectoInvitacion"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Aceptar"
-            android:layout_marginStart="10dp"
-            android:backgroundTint="#4CAF50"
-            android:textColor="#FFF" />
+            android:text="Proyecto X"
+            android:textSize="16sp"
+            android:textColor="#3A4F61"
+            android:paddingBottom="20dp" />
+
+        <!-- BOTONES -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/btnRechazar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RECHAZAR"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#D32F2F"
+                android:paddingHorizontal="12dp" />
+
+            <Button
+                android:id="@+id/btnAceptar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ACEPTAR"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#0A84FF"
+                android:layout_marginStart="12dp"
+                android:paddingHorizontal="12dp" />
+        </LinearLayout>
+
     </LinearLayout>
+
 </LinearLayout>
