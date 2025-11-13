@@ -1,6 +1,7 @@
 package sv.edu.catolica.appscrumtutor;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.widget.Button;
@@ -14,7 +15,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -62,14 +65,29 @@ public class PerfilActivity extends AppCompatActivity {
         btnEditarPerfil = findViewById(R.id.btnEditarPerfil);
         btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
 
-        // Cargar info del usuario
+        // Cargar info del usuario y su imagen
+        cargarImagenGoogle();
         cargarDatosUsuario();
 
-        // Botones
         btnEditarPerfil.setOnClickListener(v ->
                 Toast.makeText(this, "Función de edición próximamente", Toast.LENGTH_SHORT).show());
 
         btnCerrarSesion.setOnClickListener(v -> cerrarSesion());
+    }
+
+    /** 🔹 Cargar imagen del perfil de Google o logo por defecto **/
+    private void cargarImagenGoogle() {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null && account.getPhotoUrl() != null) {
+            Uri fotoUri = account.getPhotoUrl();
+            Glide.with(this)
+                    .load(fotoUri)
+                    .placeholder(R.drawable.logo_default)
+                    .circleCrop()
+                    .into(imgPerfil);
+        } else {
+            imgPerfil.setImageResource(R.drawable.logo_default);
+        }
     }
 
     /** 🔹 Cargar los datos del usuario autenticado **/
