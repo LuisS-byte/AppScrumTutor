@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Crear Tarea"
+            android:text="@string/titulo_crear_tarea"
             android:textStyle="bold"
             android:textSize="20sp"
             android:paddingBottom="16dp"/>
@@ -23,7 +23,7 @@
             android:id="@+id/etTituloTarea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Título de la tarea"
+            android:hint="@string/hint_titulo_tarea"
             android:inputType="textCapSentences"
             android:padding="12dp" />
 
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:hint="Descripción"
+            android:hint="@string/hint_descripcion_tarea"
             android:inputType="textMultiLine"
             android:minLines="3"
             android:padding="12dp" />
@@ -41,10 +41,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Vincular con historia (opcional):"
+            android:text="@string/txt_vincular_historia"
             android:textStyle="bold"
             android:layout_marginTop="16dp"
             android:textSize="14sp"/>
+
         <Spinner
             android:id="@+id/spHistoria"
             android:layout_width="match_parent"
@@ -56,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Fecha límite (YYYY-MM-DD)"
+            android:hint="@string/hint_fecha_limite"
             android:inputType="date" />
 
         <Spinner
@@ -72,12 +73,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp" />
 
-
         <Button
             android:id="@+id/btnGuardarTarea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Guardar tarea"
+            android:text="@string/btn_guardar_tarea"
             android:layout_marginTop="24dp"
             android:backgroundTint="@android:color/holo_blue_dark"
             android:textColor="#FFFFFF" />

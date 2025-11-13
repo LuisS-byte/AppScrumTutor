@@ -25,7 +25,7 @@
                 android:id="@+id/tvTemasTitulo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Temas de Aprendizaje"
+                android:text="@string/titulo_temas_aprendizaje"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:paddingBottom="12dp" />
@@ -43,7 +43,7 @@
                 android:id="@+id/tvQuizzesTitulo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Quizzes"
+                android:text="@string/titulo_quizzes"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:paddingBottom="12dp" />
@@ -59,8 +59,6 @@
 
     </ScrollView>
 
-
-
     <!-- Menú inferior -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
@@ -73,4 +71,5 @@
         android:layout_gravity="bottom"
         app:itemIconTint="@color/black"
         app:itemTextColor="@color/black" />
+
 </LinearLayout>

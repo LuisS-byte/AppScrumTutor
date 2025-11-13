@@ -30,7 +30,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tus proyectos"
+            android:text="@string/titulo_tus_proyectos"
             android:textSize="22sp"
             android:textStyle="bold"
             android:paddingBottom="10dp"
@@ -53,7 +53,7 @@
             android:id="@+id/btnCrearProyecto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Crear un proyecto"
+            android:text="@string/btn_crear_proyecto_home"
             android:onClick="CrearProyecto"
             android:textColor="#FFFFFF"
             android:backgroundTint="#6A5ACD"/>
@@ -67,5 +67,4 @@
         android:background="#0A1B2A"
         app:menu="@menu/button_nav"
         app:labelVisibilityMode="labeled"/>
-
 </LinearLayout>

@@ -23,13 +23,13 @@
                 android:id="@+id/tvTituloTema"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Título del tema"
+                android:text="@string/titulo_tema"
                 android:textColor="#FFFFFF"
                 android:textSize="26sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- SECCIÓN QUE UNE EL HEADER CON LA TARJETA (el truco visual) -->
+        <!-- SECCIÓN QUE UNE EL HEADER CON LA TARJETA (truco visual) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -58,7 +58,7 @@
                         android:id="@+id/tvContenidoTema"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Aquí irá el contenido del tema."
+                        android:text="@string/contenido_tema"
                         android:textSize="17sp"
                         android:textColor="#333"
                         android:lineSpacingExtra="4dp" />

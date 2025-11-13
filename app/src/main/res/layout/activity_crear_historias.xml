@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Crear Historia de Usuario"
+            android:text="@string/titulo_crear_historia"
             android:textStyle="bold"
             android:textSize="20sp"
             android:paddingBottom="16dp"/>
@@ -23,7 +23,7 @@
             android:id="@+id/etTitulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Título de la historia"
+            android:hint="@string/hint_titulo_historia"
             android:padding="12dp" />
 
         <EditText
@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:hint="Descripción breve"
+            android:hint="@string/hint_descripcion_historia"
             android:inputType="textMultiLine"
             android:minLines="3"
             android:padding="12dp" />
@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:hint="Criterios de aceptación"
+            android:hint="@string/hint_criterios_historia"
             android:inputType="textMultiLine"
             android:minLines="2"
             android:padding="12dp" />
@@ -64,7 +64,7 @@
             android:id="@+id/btnGuardarHistoria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Guardar historia"
+            android:text="@string/btn_guardar_historia"
             android:layout_marginTop="24dp"
             android:backgroundTint="@android:color/holo_blue_dark"
             android:textColor="#FFFFFF" />
