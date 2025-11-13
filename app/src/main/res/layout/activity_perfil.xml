@@ -19,14 +19,19 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Imagen de perfil -->
             <ImageView
                 android:id="@+id/imgPerfil"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/ic_launcher_background"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/logo_default"
                 android:layout_gravity="center"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="12dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/circle_background"
+                android:padding="2dp" />
 
+            <!-- Nombre -->
             <TextView
                 android:id="@+id/tvNombreUsuario"
                 android:layout_width="match_parent"
@@ -37,6 +42,7 @@
                 android:gravity="center"
                 android:paddingBottom="8dp" />
 
+            <!-- Correo -->
             <TextView
                 android:id="@+id/tvCorreo"
                 android:layout_width="match_parent"
@@ -45,12 +51,33 @@
                 android:gravity="center"
                 android:textColor="#555" />
 
+            <!-- Rol -->
+            <TextView
+                android:id="@+id/tvRol"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rol: Desarrollador"
+                android:textColor="#333"
+                android:gravity="center"
+                android:layout_marginTop="10dp" />
+
+            <!-- Estado -->
+            <TextView
+                android:id="@+id/tvEstado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Estado: Activo ✅"
+                android:textColor="#333"
+                android:gravity="center"
+                android:layout_marginTop="4dp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#DDD"
                 android:layout_marginVertical="16dp" />
 
+            <!-- Botón Editar -->
             <Button
                 android:id="@+id/btnEditarPerfil"
                 android:layout_width="match_parent"
@@ -60,6 +87,7 @@
                 android:textColor="#FFF"
                 android:layout_marginBottom="8dp" />
 
+            <!-- Botón Cerrar Sesión -->
             <Button
                 android:id="@+id/btnCerrarSesion"
                 android:layout_width="match_parent"
@@ -67,7 +95,6 @@
                 android:text="Cerrar Sesión"
                 android:backgroundTint="@android:color/holo_red_dark"
                 android:textColor="#FFF" />
-
         </LinearLayout>
     </ScrollView>
 

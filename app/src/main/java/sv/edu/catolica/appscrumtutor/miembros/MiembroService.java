@@ -3,6 +3,7 @@ package sv.edu.catolica.appscrumtutor.miembros;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -14,5 +15,10 @@ public interface MiembroService {
     Call<Miembro> agregarMiembro(@Path("idProyecto") long idProyecto, @Body ProyectoMiembroCreateDTO dto);
     @GET("api/proyectos/{idProyecto}/miembros/pendientes")
     Call<List<Miembro>> getMiembrosPendientes(@Path("idProyecto") long idProyecto);
+    @DELETE("api/proyectos/{idProyecto}/miembros/{idMiembro}")
+    Call<Void> eliminarMiembro(
+            @Path("idProyecto") long idProyecto,
+            @Path("idMiembro") long idMiembro
+    );
 
 }

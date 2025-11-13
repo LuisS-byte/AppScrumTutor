@@ -10,8 +10,6 @@
     android:fitsSystemWindows="true"
     tools:context=".createProyect">
 
-    <!-- HEADER -->
-    <include layout="@layout/header" />
 
     <!-- CONTENIDO PRINCIPAL -->
     <ScrollView
@@ -89,23 +87,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- NAV INFERIOR -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNavigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            app:menu="@menu/button_nav"
-            app:labelVisibilityMode="labeled"
-            app:itemIconTint="@color/black"
-            app:itemTextColor="@color/black"
-            android:fitsSystemWindows="true"
-            android:paddingBottom="0dp"
-            android:layout_gravity="bottom" />
-    </LinearLayout>
 
 </LinearLayout>
