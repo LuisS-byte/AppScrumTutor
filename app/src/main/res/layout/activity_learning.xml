@@ -9,26 +9,57 @@
 
     <include layout="@layout/header" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Centro de Aprendizaje"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:padding="16dp" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingHorizontal="12dp">
+        android:layout_weight="1">
 
         <LinearLayout
-            android:id="@+id/layoutTemas"
+            android:orientation="vertical"
+            android:padding="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:layout_height="wrap_content">
+
+            <!-- TÍTULO TEMAS -->
+            <TextView
+                android:id="@+id/tvTemasTitulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Temas de Aprendizaje"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:paddingBottom="12dp" />
+
+            <!-- CONTENEDOR DE TEMAS -->
+            <LinearLayout
+                android:id="@+id/layoutTemas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="24dp" />
+
+            <!-- TÍTULO QUIZZES -->
+            <TextView
+                android:id="@+id/tvQuizzesTitulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Quizzes"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:paddingBottom="12dp" />
+
+            <!-- CONTENEDOR DE QUIZZES -->
+            <LinearLayout
+                android:id="@+id/layoutQuizzes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+
     </ScrollView>
+
+
 
     <!-- Menú inferior -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

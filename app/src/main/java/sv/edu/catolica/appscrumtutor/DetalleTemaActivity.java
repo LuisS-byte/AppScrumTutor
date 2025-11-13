@@ -29,6 +29,6 @@ public class DetalleTemaActivity extends AppCompatActivity {
         String descripcion = getIntent().getStringExtra("descripcion");
 
         tvTitulo.setText(titulo);
-        tvContenido.setText("Contenido educativo:\n\n" + descripcion + "\n\n(Pronto: videos, ejemplos y quizzes)");
+        tvContenido.setText(descripcion);
     }
 }

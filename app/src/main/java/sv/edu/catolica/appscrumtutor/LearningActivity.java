@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,8 +17,25 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import sv.edu.catolica.appscrumtutor.Learning.QuizActivity;
+import sv.edu.catolica.appscrumtutor.Learning.QuizApi;
+import sv.edu.catolica.appscrumtutor.Learning.QuizDTO;
+import sv.edu.catolica.appscrumtutor.Learning.TipApi;
+import sv.edu.catolica.appscrumtutor.Learning.TipDTO;
+import sv.edu.catolica.appscrumtutor.network.ApiClient;
+
 public class LearningActivity extends AppCompatActivity {
     private LinearLayout layoutTemas;
+    private TipApi tipApi;
+
+    private LinearLayout layoutQuizzes;
+    private QuizApi quizApi;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,19 +58,69 @@ public class LearningActivity extends AppCompatActivity {
 
         layoutTemas = findViewById(R.id.layoutTemas);
 
-        agregarTema("Introducción a Scrum",
-                "Aprende los fundamentos y pilares del marco de trabajo Scrum.",
-                R.drawable.ic_launcher_background);
-        agregarTema("Roles en Scrum",
-                "Descubre las responsabilidades del Product Owner, Scrum Master y equipo de desarrollo.",
-                R.drawable.ic_launcher_background);
-        agregarTema("Eventos en Scrum",
-                "Conoce las reuniones clave que mantienen el flujo del equipo.",
-                R.drawable.ic_launcher_background);
-        agregarTema("Artefactos de Scrum",
-                "Explora los elementos que proporcionan transparencia al progreso.",
-                R.drawable.ic_launcher_background);
+        layoutQuizzes = findViewById(R.id.layoutQuizzes);
+        quizApi = ApiClient.getClient(this).create(QuizApi.class);
+
+        cargarQuizzes();
+
+        tipApi = ApiClient.getClient(this).create(TipApi.class);
+
+        cargarTemasDesdeBackend();
     }
+
+    private void cargarTemasDesdeBackend() {
+        tipApi.listarTodos().enqueue(new Callback<List<TipDTO>>() {
+            @Override
+            public void onResponse(Call<List<TipDTO>> call, Response<List<TipDTO>> response) {
+                if (!response.isSuccessful() || response.body() == null) return;
+
+                for (TipDTO tip : response.body()) {
+                    agregarTema(tip.getSeccion(), tip.getMensaje(), R.drawable.ic_launcher_background);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TipDTO>> call, Throwable t) {}
+        });
+    }
+    private void cargarQuizzes() {
+        quizApi.listar().enqueue(new Callback<List<QuizDTO>>() {
+            @Override
+            public void onResponse(Call<List<QuizDTO>> call, Response<List<QuizDTO>> response) {
+                if (!response.isSuccessful() || response.body() == null) return;
+
+                for (QuizDTO quiz : response.body()) {
+                    agregarQuizCard(quiz);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<QuizDTO>> call, Throwable t) {}
+        });
+    }
+
+
+    private void agregarQuizCard(QuizDTO quiz) {
+        View view = LayoutInflater.from(this).inflate(R.layout.item_quiz, layoutQuizzes, false);
+
+        TextView tvTitulo = view.findViewById(R.id.tvQuizTitulo);
+        TextView tvDescripcion = view.findViewById(R.id.tvQuizDescripcion);
+        ImageView icono = view.findViewById(R.id.ivQuizIcon);
+
+        tvTitulo.setText(quiz.getTitulo());
+        tvDescripcion.setText(quiz.getDescripcion());
+        icono.setImageResource(R.drawable.ic_launcher_background); // o un ícono personalizado
+
+        view.setOnClickListener(v -> {
+            Intent i = new Intent(this, QuizActivity.class);
+            i.putExtra("idQuiz", quiz.getId());
+            startActivity(i);
+        });
+
+        layoutQuizzes.addView(view);
+    }
+
+
 
     private void agregarTema(String titulo, String descripcion, int icono) {
         View view = LayoutInflater.from(this).inflate(R.layout.item_tema_learning, layoutTemas, false);
@@ -65,7 +133,6 @@ public class LearningActivity extends AppCompatActivity {
         tvDescripcion.setText(descripcion);
         ivIcono.setImageResource(icono);
 
-        // Ir al detalle
         view.setOnClickListener(v -> {
             Intent intent = new Intent(this, DetalleTemaActivity.class);
             intent.putExtra("titulo", titulo);
