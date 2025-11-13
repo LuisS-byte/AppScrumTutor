@@ -1,82 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    tools:context=".MainActivity"
     android:id="@+id/main"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#043255"
+    android:padding="20dp"
+    tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="40dp">
+        android:padding="30dp"
+        android:background="#FFFFFF"
+        android:elevation="6dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginHorizontal="10dp">
 
+        <!-- Título -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="24dp"
-            android:text="Bienvenido!!!"
-            android:textSize="26dp"
-            android:textStyle="bold" />
+            android:text="Bienvenido"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="#043255" />
 
+        <!-- Email -->
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Correo"
+            android:hint="Correo electrónico"
             android:inputType="textEmailAddress"
-            android:padding="12dp" />
+            android:padding="12dp"
+            android:background="#F2F7FA"
+            android:textColor="#043255"
+            android:textColorHint="#6E8A9E" />
 
+        <!-- Contraseña -->
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Contrasena"
+            android:layout_marginTop="12dp"
+            android:hint="Contraseña"
             android:inputType="textPassword"
-            android:padding="12dp" />
+            android:padding="12dp"
+            android:background="#F2F7FA"
+            android:textColor="#043255"
+            android:textColorHint="#6E8A9E" />
 
+        <!-- Olvidó contraseña -->
         <TextView
             android:id="@+id/tvForgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="¿Olvidaste tu contraseña?"
-            android:textColor="@android:color/holo_blue_dark"
-            android:textSize="14dp" />
+            android:textColor="#0A84FF"
+            android:textSize="14sp" />
 
+        <!-- Botón login -->
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:onClick="Simulado"
-            android:backgroundTint="@android:color/holo_blue_dark"
-            android:text="Login" />
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#0A84FF"
+            android:text="INICIAR SESIÓN"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
 
+        <!-- Ir a registro -->
         <TextView
             android:id="@+id/tvRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Regístrate aquí"
-            android:textColor="@android:color/holo_blue_dark" />
+            android:text="Crear una nueva cuenta"
+            android:textColor="#0A84FF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
+        <!-- Divider -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="O quieres continuar con"
-            android:textSize="14sp" />
+            android:layout_marginTop="22dp"
+            android:text="O continuar con"
+            android:textSize="14sp"
+            android:textColor="#3A4F61" />
 
+        <!-- Botón Google -->
         <ImageButton
             android:id="@+id/btnGoogle"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="12dp"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_launcher_background" />
+            android:src="@drawable/googleicon" />
+
     </LinearLayout>
+
 </ScrollView>

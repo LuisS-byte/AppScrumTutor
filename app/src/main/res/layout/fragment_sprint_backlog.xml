@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
     android:background="#FFFFFF">
 
@@ -10,20 +11,42 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Título -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Backlog del Sprint"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:paddingBottom="12dp"
-            android:textColor="#333" />
+            android:textColor="#043255"
+            android:paddingBottom="12dp"/>
 
-        <LinearLayout
-            android:id="@+id/layoutSprintBacklog"
+        <!-- TARJETA DEL BACKLOG -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:layout_margin="4dp"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="#D5E0E8"
+            android:backgroundTint="#F2F7FA">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:id="@+id/layoutSprintBacklog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 </ScrollView>

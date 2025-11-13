@@ -5,57 +5,84 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF">
+    android:background="#043255">
 
-    <!-- Header -->
-    <include layout="@layout/header" />
-
-    <!-- Título del proyecto -->
-    <TextView
-        android:id="@+id/tvProjectTitle"
+    <!-- ===================================== -->
+    <!-- HEADER -->
+    <!-- ===================================== -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Reservation Project"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:padding="8dp" />
+        android:orientation="vertical"
+        android:paddingTop="40dp">
 
-    <TextView
-        android:id="@+id/tvSprintTitle"
+        <include layout="@layout/header"/>
+    </LinearLayout>
+
+    <!-- ===================================== -->
+    <!-- SECCIÓN: INFO DEL PROYECTO -->
+    <!-- ===================================== -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sprint actual: Módulo Autenticación"
-        android:textAlignment="center"
-        android:textColor="#666"
-        android:textSize="14sp"
-        android:paddingBottom="8dp" />
+        android:orientation="vertical"
+        android:padding="12dp">
 
-    <!-- Pestañas -->
+        <TextView
+            android:id="@+id/tvProjectTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reservation Project"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:paddingBottom="4dp"/>
+
+        <TextView
+            android:id="@+id/tvSprintTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sprint actual: Módulo Autenticación"
+            android:textAlignment="center"
+            android:textColor="#A7C4D4"
+            android:textSize="14sp"
+            android:paddingBottom="8dp"/>
+    </LinearLayout>
+
+    <!-- ===================================== -->
+    <!-- SECCIÓN: PESTAÑAS -->
+    <!-- ===================================== -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#062B45"
+        app:tabIndicatorColor="#FFFFFF"
+        app:tabIndicatorHeight="4dp"
+        app:tabSelectedTextColor="#FFFFFF"
+        app:tabTextColor="#88AABF"
         app:tabMode="fixed"
         app:tabGravity="fill" />
 
-    <!-- Contenedor de Fragments -->
+    <!-- ===================================== -->
+    <!-- SECCIÓN: FRAGMENTS -->
+    <!-- ===================================== -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"/>
 
-    <!-- Menú inferior -->
+    <!-- ===================================== -->
+    <!-- NAVIGATION BOTTOM -->
+    <!-- ===================================== -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/button_nav"
-        app:labelVisibilityMode="labeled"
         android:background="#FFFFFF"
         android:elevation="8dp"
-        android:layout_gravity="bottom"
-        app:itemIconTint="@color/black"
-        app:itemTextColor="@color/black" />
+        app:menu="@menu/button_nav"
+        app:labelVisibilityMode="labeled" />
 </LinearLayout>

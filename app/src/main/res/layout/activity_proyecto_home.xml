@@ -2,50 +2,83 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:orientation="vertical"
+    android:background="#043255">
 
-    <!-- Header -->
-    <include layout="@layout/header"/>
-
-    <!-- Título del proyecto -->
-    <TextView
-        android:id="@+id/tvProjectTitle"
+    <!-- ====================== HEADER ====================== -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Proyecto"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:padding="8dp"/>
+        android:orientation="vertical"
+        android:paddingTop="40dp">
 
-    <!-- Tabs -->
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayoutProyectoHome"
+        <include layout="@layout/header"/>
+    </LinearLayout>
+
+    <!-- ===================== TITLE SECTION ===================== -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabMode="fixed"
-        app:tabGravity="fill"/>
+        android:padding="16dp">
 
-    <!-- ViewPager -->
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPagerProyectoHome"
+        <TextView
+            android:id="@+id/tvProjectTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Proyecto"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:textColor="#FFFFFF"
+            android:padding="4dp"
+            android:textAlignment="center"/>
+    </LinearLayout>
+
+    <!-- ==================== TABS SECTION ==================== -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayoutProyectoHome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#062B45"
+            app:tabIndicatorColor="#FFFFFF"
+            app:tabSelectedTextColor="#FFFFFF"
+            app:tabTextColor="#88AABF"
+            app:tabMode="fixed"
+            app:tabGravity="fill"/>
+    </LinearLayout>
+
+    <!-- ================== VIEWPAGER SECTION ================== -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1">
 
-    <!-- Menú inferior -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigation"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPagerProyectoHome"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+    <!-- =================== BOTTOM NAVIGATION =================== -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:menu="@menu/button_nav"
-        app:labelVisibilityMode="labeled"
-        android:background="#FFFFFF"
-        android:elevation="8dp"
-        android:layout_gravity="bottom"
-        app:itemIconTint="@color/black"
-        app:itemTextColor="@color/black" />
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#0A1B2A"
+            app:menu="@menu/button_nav"
+            app:labelVisibilityMode="labeled"
+            app:itemIconTint="@android:color/white"
+            app:itemTextColor="@android:color/white"/>
+    </LinearLayout>
+
 </LinearLayout>
