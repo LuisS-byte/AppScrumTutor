@@ -1,66 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:padding="16dp"
     android:background="#FFFFFF">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <!-- Botón crear historia -->
+        <Button
+            android:id="@+id/btnCrearHistoria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:text="CREAR HISTORIA"
+            android:backgroundTint="@android:color/holo_blue_dark"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="16dp" />
 
-            <!-- Historias del sprint actual -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Historias del sprint actual"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:paddingBottom="8dp"
-                android:textColor="#333" />
+        <!-- Título del backlog -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Backlog general del proyecto"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:paddingBottom="8dp"
+            android:textColor="#333" />
 
-            <LinearLayout
-                android:id="@+id/layoutSprintTareas"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="16dp" />
+        <!-- Contenedor de historias -->
+        <LinearLayout
+            android:id="@+id/layoutBacklogTareas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="8dp" />
 
-            <!-- Botón para crear historia -->
-            <Button
-                android:id="@+id/btnCrearHistoria"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="CREAR HISTORIA / TAREA"
-                android:backgroundTint="@android:color/holo_blue_dark"
-                android:textColor="#FFFFFF"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Backlog general -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Backlog general del proyecto"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:paddingBottom="8dp"
-                android:textColor="#333" />
-
-            <LinearLayout
-                android:id="@+id/layoutBacklogTareas"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="8dp" />
-
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,15 +18,24 @@ import androidx.fragment.app.Fragment;
 import java.util.Arrays;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import sv.edu.catolica.appscrumtutor.CrearTareaActivity;
 import sv.edu.catolica.appscrumtutor.DetalleTareaActivity;
 import sv.edu.catolica.appscrumtutor.R;
+import sv.edu.catolica.appscrumtutor.network.ApiClient;
+import sv.edu.catolica.appscrumtutor.sprint.Tarea;
+import sv.edu.catolica.appscrumtutor.sprint.TareaService;
 
 public class ActividadesFragment extends Fragment {
 
 
     private LinearLayout layoutPendiente, layoutEnProgreso, layoutHecho;
     private Button btnNuevaTarea;
+
+    private long idProyecto;
+    private long idSprint;
 
     public ActividadesFragment() { /* constructor vacío */ }
 
@@ -37,35 +47,67 @@ public class ActividadesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_actividades, container, false);
 
         // Inicializar vistas
+
         layoutPendiente = view.findViewById(R.id.layoutPendiente);
         layoutEnProgreso = view.findViewById(R.id.layoutEnProgreso);
         layoutHecho = view.findViewById(R.id.layoutHecho);
         btnNuevaTarea = view.findViewById(R.id.btnNuevaTarea);
 
-        // Cargar datos mock iniciales
-        List<String[]> tareasMock = Arrays.asList(
-                new String[]{"Diseñar login", "Diseñar UI en XML", "22/05", "Alta", "José"},
-                new String[]{"Conectar backend", "Implementar API REST", "25/05", "Media", "Carlos"},
-                new String[]{"Configurar base de datos", "PostgreSQL local", "20/05", "Baja", "Ana"}
-        );
+        if (getArguments() != null) {
+            idProyecto = getArguments().getLong("idProyecto", -1);
+            idSprint = getArguments().getLong("idSprint", -1);
+        }
 
-        for (String[] t : tareasMock)
-            agregarTarea(layoutPendiente, t[0], t[1], t[2], t[3], t[4]);
+        cargarTareasDesdeBackend();
 
-        // Acción del botón para abrir formulario de nueva tarea
         btnNuevaTarea.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), CrearTareaActivity.class);
-            startActivity(intent);
+            Intent i = new Intent(getActivity(), CrearTareaActivity.class);
+            i.putExtra("idSprint", idSprint);
+            i.putExtra("idProyecto", idProyecto);
+            startActivity(i);
         });
 
         return view;
     }
 
-    /**
-     * Crea dinámicamente una tarjeta de tarea dentro del contenedor indicado
-     */
-    private void agregarTarea(LinearLayout contenedor, String titulo, String descripcion,
-                              String fecha, String prioridad, String responsable) {
+    private void cargarTareasDesdeBackend() {
+        TareaService service = ApiClient.getClient(getContext()).create(TareaService.class);
+
+        service.listarPorSprint(idSprint).enqueue(new Callback<List<Tarea>>() {
+            @Override
+            public void onResponse(Call<List<Tarea>> call, Response<List<Tarea>> response) {
+                if (!isAdded()) return;
+
+                if (response.isSuccessful() && response.body() != null) {
+
+                    layoutPendiente.removeAllViews();
+                    layoutEnProgreso.removeAllViews();
+                    layoutHecho.removeAllViews();
+
+                    for (Tarea t : response.body()) {
+                        switch (t.getIdEstado()) {
+                            case 1: agregarTarea(layoutPendiente, t); break;
+                            case 2: agregarTarea(layoutEnProgreso, t); break;
+                            case 3: agregarTarea(layoutHecho, t); break;
+                            default: agregarTarea(layoutPendiente, t);
+                        }
+                    }
+
+                } else {
+                    Toast.makeText(getContext(), "Error al cargar tareas", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Tarea>> call, Throwable t) {
+                if (!isAdded()) return;
+                Toast.makeText(getContext(), "Error: " + t.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void agregarTarea(LinearLayout contenedor, Tarea tarea) {
 
         View tareaView = LayoutInflater.from(getContext()).inflate(R.layout.item_tarea, contenedor, false);
 
@@ -76,36 +118,19 @@ public class ActividadesFragment extends Fragment {
         TextView tvResponsable = tareaView.findViewById(R.id.tvResponsable);
         CheckBox cbCompletado = tareaView.findViewById(R.id.cbCompletado);
 
-        tvTitulo.setText(titulo);
-        tvDescripcion.setText(descripcion);
-        tvFecha.setText("📅 " + fecha);
-        tvPrioridad.setText("🔵 " + prioridad);
-        tvResponsable.setText("👤 " + responsable);
+        tvTitulo.setText(tarea.getTitulo());
+        tvDescripcion.setText(tarea.getDescripcion());
+        tvFecha.setText("📅 " + (tarea.getFechaLimite() != null ? tarea.getFechaLimite() : "N/A"));
+        tvPrioridad.setText("🔵 Normal"); // si agregas prioridad la cambiamos
+        tvResponsable.setText("👤 " + (tarea.getAsignadoANombre() != null ? tarea.getAsignadoANombre() : "Sin asignar"));
 
         tareaView.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), DetalleTareaActivity.class);
-            startActivity(intent);
-        });
-        // Efecto visual: marcar completada
-        cbCompletado.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            float alpha = isChecked ? 0.5f : 1f;
-            tvTitulo.setAlpha(alpha);
-            tvDescripcion.setAlpha(alpha);
-
-            // (Opcional) mover de Pendiente a Hecho visualmente
-            if (isChecked && contenedor != layoutHecho) {
-                ((ViewGroup) tareaView.getParent()).removeView(tareaView);
-                layoutHecho.addView(tareaView);
-            } else if (!isChecked && contenedor == layoutHecho) {
-                ((ViewGroup) tareaView.getParent()).removeView(tareaView);
-                layoutPendiente.addView(tareaView);
-            }
+            Intent i = new Intent(getActivity(), DetalleTareaActivity.class);
+            i.putExtra("idTarea", tarea.getId());
+            startActivity(i);
         });
 
         contenedor.addView(tareaView);
     }
-
-
-
 
 }

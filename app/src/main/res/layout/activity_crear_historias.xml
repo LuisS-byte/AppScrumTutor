@@ -24,7 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Título de la historia"
-            android:inputType="textCapSentences"
             android:padding="12dp" />
 
         <EditText
@@ -53,6 +52,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:entries="@array/prioridades" />
+
+        <Spinner
+            android:id="@+id/spEstado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:entries="@array/estado_historia" />
 
         <Button
             android:id="@+id/btnGuardarHistoria"

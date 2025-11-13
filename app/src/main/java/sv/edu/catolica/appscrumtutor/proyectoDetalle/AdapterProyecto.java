@@ -13,23 +13,29 @@ import androidx.fragment.app.Fragment;
 
 import sv.edu.catolica.appscrumtutor.fragments.ActividadesFragment;
 import sv.edu.catolica.appscrumtutor.fragments.BacklogFrament;
+import sv.edu.catolica.appscrumtutor.fragments.BacklogSprintFragment;
 import sv.edu.catolica.appscrumtutor.fragments.CalendarioFrament;
 public class AdapterProyecto  extends FragmentStateAdapter {
 
-    private final long idProyecto;
-    private final long idSprint;
     private final List<Fragment> fragments = new ArrayList<>();
 
-    public AdapterProyecto(@NonNull AppCompatActivity activity, long idProyecto, long idSprint) {
-        super(activity);
-        this.idProyecto = idProyecto;
-        this.idSprint = idSprint;
+    public AdapterProyecto(@NonNull AppCompatActivity activity,
+                           long idProyecto,
+                           long idSprint,
+                           String fechaInicio,
+                           String fechaFin) {
 
+        super(activity);
+
+        // Bundle compartido
         Bundle args = new Bundle();
         args.putLong("idProyecto", idProyecto);
         args.putLong("idSprint", idSprint);
+        args.putString("fechaInicioSprint", fechaInicio);
+        args.putString("fechaFinSprint", fechaFin);
 
-        BacklogFrament backlog = new BacklogFrament();
+        // Crear fragments con argumentos
+        BacklogSprintFragment backlog = new BacklogSprintFragment();
         backlog.setArguments(args);
 
         ActividadesFragment actividades = new ActividadesFragment();
@@ -38,6 +44,7 @@ public class AdapterProyecto  extends FragmentStateAdapter {
         CalendarioFrament calendario = new CalendarioFrament();
         calendario.setArguments(args);
 
+        // Guardar orden de pestañas
         fragments.add(backlog);
         fragments.add(actividades);
         fragments.add(calendario);

@@ -2,8 +2,9 @@ package sv.edu.catolica.appscrumtutor.sprint;
 
 public class Historia {
 
-    private Integer id;                  // coincide con el campo del DTO
+    private Integer id;
     private Long idProyecto;
+    private Integer idSprint; // CAMPO NUEVO QUE NECESITAS
     private String titulo;
     private String descripcion;
     private Integer idPrioridad;
@@ -11,11 +12,11 @@ public class Historia {
     private String criteriosAceptacion;
     private Integer idEstado;
     private String estado;
-    private String fechaCreacion;        // Retrofit convierte LocalDateTime -> String
+    private String fechaCreacion; // LocalDateTime  String para Retrofit
 
-    // Getters
     public Integer getId() { return id; }
     public Long getIdProyecto() { return idProyecto; }
+    public Integer getIdSprint() { return idSprint; } // GETTER NUEVO
     public String getTitulo() { return titulo; }
     public String getDescripcion() { return descripcion; }
     public Integer getIdPrioridad() { return idPrioridad; }

@@ -55,6 +55,7 @@ public class SprintsActivity extends AppCompatActivity {
 
         layoutSprints = findViewById(R.id.layoutSprints);
         Button btnCrearSprint = findViewById(R.id.btnCrearSprint);
+
         // Solo mostrar botón crear si el usuario tiene permisos
 
         //btnCrearSprint.setVisibility(esProductOwner ? View.VISIBLE : View.GONE);
@@ -62,8 +63,11 @@ public class SprintsActivity extends AppCompatActivity {
         btnCrearSprint.setOnClickListener(v -> {
             // Ir a la misma activity para CREAR un sprint
             Intent intent = new Intent(this, GestionarSprintActivity.class);
+            intent.putExtra("idProyecto", idProyecto);
             startActivity(intent);
         });
+
+
 
         Button btnVerMiembros = findViewById(R.id.btnVerMiembros);
 
@@ -131,6 +135,7 @@ public class SprintsActivity extends AppCompatActivity {
         TextView tvEstado = view.findViewById(R.id.tvEstado);
         TextView tvFechas = view.findViewById(R.id.tvFechas);
         Button btnVer = view.findViewById(R.id.btnVerSprint);
+        Button btnEditarSprint = view.findViewById(R.id.btnEditarSprint);
 
         tvNombre.setText(sprint.getNombre());
         tvEstado.setText(sprint.getEstadoDescripcion() != null ? sprint.getEstadoDescripcion() : "Sin estado");
@@ -144,6 +149,8 @@ public class SprintsActivity extends AppCompatActivity {
             intent.putExtra("idProyecto", idProyecto);
             intent.putExtra("idSprint", sprint.getIdSprint());
             intent.putExtra("nombreSprint", sprint.getNombre());
+            intent.putExtra("fechaInicioSprint", sprint.getFechaInicio());
+            intent.putExtra("fechaFinSprint", sprint.getFechaFin());
 
             // también pasa el nombre del proyecto
             String nombreProyecto = getIntent().getStringExtra("nombreProyecto");
@@ -154,7 +161,27 @@ public class SprintsActivity extends AppCompatActivity {
 
 
         });
+        btnEditarSprint.setOnClickListener(v -> {
 
+            Intent intent = new Intent(this, GestionarSprintActivity.class);
+            intent.putExtra("idProyecto", idProyecto);
+            intent.putExtra("idSprint", sprint.getIdSprint());
+            startActivity(intent);
+        });
         layoutSprints.addView(view);
     }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (idProyecto != -1) {
+            cargarSprintsDesdeBackend(idProyecto);
+        }
+    }
+
+
+
 }
+
