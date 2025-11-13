@@ -110,13 +110,14 @@ public class BacklogFrament extends Fragment {
         historiaView.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), DetalleHistoriasActivity.class);
             intent.putExtra("idHistoria", historia.getId());
-            intent.putExtra("idHistoria", historia.getId());
+            intent.putExtra("idProyecto", idProyecto);
+            intent.putExtra("idSprint", historia.getIdSprint()); // si existe
+
             intent.putExtra("titulo", historia.getTitulo());
             intent.putExtra("descripcion", historia.getDescripcion());
             intent.putExtra("prioridad", historia.getPrioridad());
             intent.putExtra("estado", historia.getEstado());
             intent.putExtra("criterios", historia.getCriteriosAceptacion());
-
             startActivity(intent);
         });
 
