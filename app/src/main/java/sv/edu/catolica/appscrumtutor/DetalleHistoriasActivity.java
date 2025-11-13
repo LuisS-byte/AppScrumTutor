@@ -103,7 +103,7 @@ public class DetalleHistoriasActivity extends AppCompatActivity {
         intent.putExtra("idHistoria", idHistoria);
         intent.putExtra("idProyecto", getIntent().getLongExtra("idProyecto", -1)); // <- AGREGA ESTO
         intent.putExtra("idSprint", getIntent().getIntExtra("idSprint", -1)); // optional
-        startActivity(intent);
+        startActivityForResult(intent, 200);
     }
 
 
@@ -127,5 +127,12 @@ public class DetalleHistoriasActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == 200 && resultCode == RESULT_OK) {
+            finish(); // Cierra esta pantalla
+        }
+    }
 }

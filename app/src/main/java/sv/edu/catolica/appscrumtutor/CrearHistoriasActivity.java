@@ -150,6 +150,7 @@ public class CrearHistoriasActivity extends AppCompatActivity {
             public void onResponse(Call<Historia> call, Response<Historia> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(CrearHistoriasActivity.this, "Cambios guardados", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
                     finish();
                 } else {
                     Toast.makeText(CrearHistoriasActivity.this, "Error al actualizar", Toast.LENGTH_SHORT).show();
