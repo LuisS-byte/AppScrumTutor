@@ -75,7 +75,6 @@ public class MiembrosActivity extends AppCompatActivity {
                 .setCancelable(true)
                 .create();
 
-        // cargar roles desde backend
         RolProyectoService rolService = ApiClient.getClient(this).create(RolProyectoService.class);
         rolService.getRolesProyecto().enqueue(new Callback<List<RolProyecto>>() {
             @Override
@@ -85,7 +84,6 @@ public class MiembrosActivity extends AppCompatActivity {
                             .stream()
                             .filter(r -> r.getIdRolProyecto() != 1)
                             .collect(Collectors.toList());
-
 
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(
                             MiembrosActivity.this,
@@ -119,12 +117,10 @@ public class MiembrosActivity extends AppCompatActivity {
                 }
             }
 
-
             @Override
             public void onFailure(Call<List<RolProyecto>> call, Throwable t) {
                 Toast.makeText(MiembrosActivity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
-
         });
     }
 
@@ -177,35 +173,13 @@ public class MiembrosActivity extends AppCompatActivity {
         });
     }
 
-    /**  Simulación: aquí deberías obtener el ID del usuario por correo */
-    private void obtenerIdUsuarioPorCorreo(String correo, long idRol) {
-        UsuarioService usuarioService = ApiClient.getClient(this).create(UsuarioService.class);
-
-        usuarioService.getUsuarioPorCorreo(correo).enqueue(new Callback<Usuario>() {
-            @Override
-            public void onResponse(Call<Usuario> call, Response<Usuario> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    Long idUsuario = response.body().getIdUsuario();
-                    agregarMiembroYNotificar(idUsuario.toString(), idRol);
-                } else {
-                    Toast.makeText(MiembrosActivity.this, "Correo no encontrado", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Usuario> call, Throwable t) {
-                Toast.makeText(MiembrosActivity.this, "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
-    /**  Crea una notificación tipo INVITACIÓN (id_tipo=5) */
+    /** 🔔 Crea una notificación tipo INVITACIÓN (id_tipo = 5) */
     private void crearNotificacionInvitacion(Long usuarioId) {
         NotificacionService notifService = ApiClient.getClient(this).create(NotificacionService.class);
         NotificacionCreateDTO notif = new NotificacionCreateDTO();
         notif.setIdUsuario(usuarioId);
         notif.setIdTipo(5);
+        notif.setIdProyecto(idProyecto); // nuevo: relacionar con el proyecto actual
         notif.setMensaje("Has sido invitado a un nuevo proyecto");
 
         notifService.crearNotificacion(notif).enqueue(new Callback<Notificacion>() {
@@ -236,7 +210,8 @@ public class MiembrosActivity extends AppCompatActivity {
                     layoutMiembros.removeAllViews();
                     List<Miembro> miembros = response.body();
                     if (miembros.isEmpty()) mostrarSinMiembros();
-                    else for (Miembro m : miembros) agregarMiembro(m.getUsuarioNombre(), m.getRolDescripcion(), "Activo");
+                    else for (Miembro m : miembros)
+                        agregarMiembro(m.getUsuarioNombre(), m.getRolDescripcion(), "Activo");
                 } else {
                     Toast.makeText(MiembrosActivity.this, "Error al cargar miembros", Toast.LENGTH_SHORT).show();
                 }
