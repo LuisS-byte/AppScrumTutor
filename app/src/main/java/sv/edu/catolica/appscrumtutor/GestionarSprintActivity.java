@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -15,13 +17,17 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import sv.edu.catolica.appscrumtutor.network.ApiClient;
+import sv.edu.catolica.appscrumtutor.sprint.Historia;
+import sv.edu.catolica.appscrumtutor.sprint.HistoriaService;
 import sv.edu.catolica.appscrumtutor.sprint.Sprint;
 import sv.edu.catolica.appscrumtutor.sprint.SprintCreateDTO;
 import sv.edu.catolica.appscrumtutor.sprint.SprintService;
@@ -30,6 +36,12 @@ import sv.edu.catolica.appscrumtutor.sprint.SprintUpdateDTO;
 public class GestionarSprintActivity extends AppCompatActivity {
     private EditText etNombreSprint, etObjetivo, etFechaInicio, etFechaFin;
     private Spinner spEstado;
+
+    private Button btnSeleccionarHistorias;
+    private TextView tvHistoriasSeleccionadas;
+
+    // Historias seleccionadas (IDs)
+    private List<Integer> historiasSeleccionadas = new ArrayList<>();
     private Button btnGuardar;
 
     private long idProyecto = -1;
@@ -53,6 +65,12 @@ public class GestionarSprintActivity extends AppCompatActivity {
         etFechaFin = findViewById(R.id.etFechaFin);
         spEstado = findViewById(R.id.spEstadoSprint);
         btnGuardar = findViewById(R.id.btnGuardarSprint);
+        btnSeleccionarHistorias = findViewById(R.id.btnSeleccionarHistorias);
+        tvHistoriasSeleccionadas = findViewById(R.id.tvHistoriasSeleccionadas);
+
+        btnSeleccionarHistorias.setOnClickListener(v -> cargarHistoriasNoAsignadas());
+
+
 
         configurarSelectorFecha();
 
@@ -63,12 +81,27 @@ public class GestionarSprintActivity extends AppCompatActivity {
         // Editar modo
         esEdicion = (idSprint != -1);
 
+        // Editar o crear
+        esEdicion = (idSprint != -1);
+
         if (esEdicion) {
-            cargarDatosDeSprint();
+            // Modo edición
+            cargarDatosDeSprint();        // carga nombre, fechas, estado
             btnGuardar.setText("Actualizar Sprint");
+
+            // Deshabilitar selección de historias
+            btnSeleccionarHistorias.setEnabled(false);
+            btnSeleccionarHistorias.setAlpha(0.4f);
+
+            // Mostrar historias asignadas a este sprint
+            cargarHistoriasAsignadas();
+
         } else {
+            // Modo creación
             btnGuardar.setText("Crear Sprint");
-            spEstado.setEnabled(false); // backend lo asigna automáticamente
+
+            // El estado no se elige en creación
+            spEstado.setEnabled(false);
             spEstado.setAlpha(0.4f);
         }
 
@@ -82,6 +115,7 @@ public class GestionarSprintActivity extends AppCompatActivity {
 
     // ------------------- FECHAS ---------------------- //
 
+
     private void configurarSelectorFecha() {
 
         etFechaInicio.setFocusable(false);
@@ -89,6 +123,60 @@ public class GestionarSprintActivity extends AppCompatActivity {
 
         etFechaInicio.setOnClickListener(v -> mostrarPickerFechaInicio());
         etFechaFin.setOnClickListener(v -> mostrarPickerFechaFin());
+    }
+    private void cargarHistoriasNoAsignadas() {
+        HistoriaService api = ApiClient.getClient(this).create(HistoriaService.class);
+
+        api.listarPorProyecto(idProyecto).enqueue(new Callback<List<Historia>>() {
+            @Override
+            public void onResponse(Call<List<Historia>> call, Response<List<Historia>> response) {
+                if (!response.isSuccessful() || response.body() == null) {
+                    Toast.makeText(GestionarSprintActivity.this, "Error cargando historias", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                List<Historia> disponibles = new ArrayList<>();
+                for (Historia h : response.body()) {
+                    if (h.getIdSprint() == null) {   // solo historias sin sprint
+                        disponibles.add(h);
+                    }
+                }
+
+                mostrarDialogoSeleccion(disponibles);
+            }
+
+            @Override
+            public void onFailure(Call<List<Historia>> call, Throwable t) {
+                Toast.makeText(GestionarSprintActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void cargarHistoriasAsignadas() {
+        HistoriaService api = ApiClient.getClient(this).create(HistoriaService.class);
+
+        api.listarPorProyecto(idProyecto).enqueue(new Callback<List<Historia>>() {
+            @Override
+            public void onResponse(Call<List<Historia>> call, Response<List<Historia>> response) {
+                if (!response.isSuccessful() || response.body() == null) return;
+
+                StringBuilder sb = new StringBuilder();
+
+                for (Historia h : response.body()) {
+                    if (h.getIdSprint() != null && h.getIdSprint() == idSprint) {
+                        sb.append("- ").append(h.getTitulo()).append("\n");
+                    }
+                }
+
+                if (sb.length() == 0) {
+                    tvHistoriasSeleccionadas.setText("No hay historias asignadas");
+                } else {
+                    tvHistoriasSeleccionadas.setText(sb.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Historia>> call, Throwable t) {}
+        });
     }
 
     private void mostrarPickerFechaInicio() {
@@ -112,6 +200,43 @@ public class GestionarSprintActivity extends AppCompatActivity {
         dp.getDatePicker().setMinDate(System.currentTimeMillis());
         dp.show();
     }
+    private void mostrarDialogoSeleccion(List<Historia> disponibles) {
+        if (disponibles.isEmpty()) {
+            Toast.makeText(this, "No hay historias disponibles", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String[] nombres = new String[disponibles.size()];
+
+        for (int i = 0; i < disponibles.size(); i++) {
+            nombres[i] = disponibles.get(i).getTitulo();
+        }
+
+        final int[] seleccion = { -1 }; // solo una opción
+
+        new AlertDialog.Builder(this)
+                .setTitle("Selecciona una historia")
+                .setSingleChoiceItems(nombres, -1, (dialog, which) -> {
+                    seleccion[0] = which; // guardar selección
+                })
+                .setPositiveButton("Aceptar", (dialog, which) -> {
+
+                    historiasSeleccionadas.clear();
+
+                    if (seleccion[0] != -1) {
+                        Historia h = disponibles.get(seleccion[0]);
+                        historiasSeleccionadas.add(h.getId());
+                        tvHistoriasSeleccionadas.setText("- " + h.getTitulo());
+                    } else {
+                        tvHistoriasSeleccionadas.setText("Ninguna historia seleccionada");
+                    }
+
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+
 
     private void mostrarPickerFechaFin() {
 
@@ -143,6 +268,19 @@ public class GestionarSprintActivity extends AppCompatActivity {
         dp.show();
     }
 
+    private void asignarHistoriasAlSprint(long idSprint) {
+        HistoriaService api = ApiClient.getClient(this).create(HistoriaService.class);
+
+        for (Integer idHistoria : historiasSeleccionadas) {
+            api.asignarSprint(idHistoria, idSprint).enqueue(new Callback<>() {
+                @Override
+                public void onResponse(Call call, Response response) {}
+
+                @Override
+                public void onFailure(Call call, Throwable t) {}
+            });
+        }
+    }
 
     // ------------------- CARGAR SPRINT EXISTENTE ---------------------- //
 
@@ -213,10 +351,14 @@ public class GestionarSprintActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Sprint> call, Response<Sprint> response) {
                 if (response.isSuccessful()) {
+                    Sprint nuevoSprint = response.body();
+
+                    if (!historiasSeleccionadas.isEmpty()) {
+                        asignarHistoriasAlSprint(nuevoSprint.getIdSprint());
+                    }
+
                     Toast.makeText(GestionarSprintActivity.this, "Sprint creado", Toast.LENGTH_SHORT).show();
                     finish();
-                } else {
-                    Toast.makeText(GestionarSprintActivity.this, "Error HTTP: " + response.code(), Toast.LENGTH_LONG).show();
                 }
             }
 

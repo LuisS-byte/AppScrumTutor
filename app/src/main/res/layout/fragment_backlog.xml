@@ -20,23 +20,40 @@
             android:textColor="#FFFFFF"
             android:layout_marginBottom="16dp" />
 
-        <!-- Título del backlog -->
         <TextView
+            android:id="@+id/tvTituloNoAsignadas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Backlog general del proyecto"
+            android:text="No asignadas"
             android:textStyle="bold"
-            android:textSize="16sp"
-            android:paddingBottom="8dp"
-            android:textColor="#333" />
+            android:textSize="18sp"
+            android:padding="8dp"
+            android:textColor="#222" />
 
-        <!-- Contenedor de historias -->
         <LinearLayout
-            android:id="@+id/layoutBacklogTareas"
+            android:id="@+id/layoutNoAsignadas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="8dp" />
+            android:paddingBottom="16dp"/>
+
+        <TextView
+            android:id="@+id/tvTituloAsignadas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Asignadas"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:padding="8dp"
+            android:textColor="#222"/>
+
+        <LinearLayout
+            android:id="@+id/layoutAsignadas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp"/>
+
 
     </LinearLayout>
 </ScrollView>

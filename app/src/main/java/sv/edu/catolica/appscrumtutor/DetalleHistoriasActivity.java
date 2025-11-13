@@ -7,10 +7,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,10 +21,12 @@ import retrofit2.Response;
 import sv.edu.catolica.appscrumtutor.network.ApiClient;
 import sv.edu.catolica.appscrumtutor.sprint.Historia;
 import sv.edu.catolica.appscrumtutor.sprint.HistoriaService;
+import sv.edu.catolica.appscrumtutor.sprint.Sprint;
+import sv.edu.catolica.appscrumtutor.sprint.SprintService;
 
 public class DetalleHistoriasActivity extends AppCompatActivity {
     private TextView tvTituloHistoria, tvDescripcionHistoria, tvPrioridad, tvEstado, tvCriteriosAceptacion;
-    private Button btnEditarHistoria, btnEliminar;
+    private Button btnEditarHistoria, btnEliminar, btnAsignarSprint;
 
     private int idHistoria;
     @Override
@@ -52,6 +57,7 @@ public class DetalleHistoriasActivity extends AppCompatActivity {
 
         btnEditarHistoria = findViewById(R.id.btnEditarHistoria);
         btnEliminar = findViewById(R.id.btnEliminarHistoria);
+        btnAsignarSprint = findViewById(R.id.btnAsignarSprint);
 
         // Recuperar ID necesario
         idHistoria = getIntent().getIntExtra("idHistoria", -1);
@@ -66,6 +72,8 @@ public class DetalleHistoriasActivity extends AppCompatActivity {
 
         btnEditarHistoria.setOnClickListener(v -> abrirEditor());
         btnEliminar.setOnClickListener(v -> eliminarHistoria());
+
+        btnAsignarSprint.setOnClickListener(v -> mostrarDialogoSprints());
     }
 
 
@@ -105,7 +113,78 @@ public class DetalleHistoriasActivity extends AppCompatActivity {
         intent.putExtra("idSprint", getIntent().getIntExtra("idSprint", -1)); // optional
         startActivityForResult(intent, 200);
     }
+    private void mostrarDialogoSprints() {
+        SprintService sprintApi = ApiClient.getClient(this).create(SprintService.class);
 
+        long idProyecto = getIntent().getLongExtra("idProyecto", -1);
+        int sprintActual = getIntent().getIntExtra("idSprint", -1);
+
+        sprintApi.listarPorProyecto(idProyecto).enqueue(new Callback<List<Sprint>>() {
+            @Override
+            public void onResponse(Call<List<Sprint>> call, Response<List<Sprint>> response) {
+                if (!response.isSuccessful() || response.body() == null) {
+                    Toast.makeText(DetalleHistoriasActivity.this, "No se pudieron cargar los sprints", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                List<Sprint> sprints = response.body();
+
+                // 1. Quitar sprint actual
+                if (sprintActual != -1) {
+                    sprints.removeIf(s -> s.getIdSprint() == sprintActual);
+                }
+
+                // 2. Quitar sprints cerrados (estado = 3)
+                sprints.removeIf(s -> s.getIdEstado() == 3);
+
+                if (sprints.isEmpty()) {
+                    Toast.makeText(DetalleHistoriasActivity.this, "No hay sprints disponibles", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Lista limpia de nombres
+                String[] nombres = new String[sprints.size()];
+                for (int i = 0; i < sprints.size(); i++) {
+                    nombres[i] = sprints.get(i).getNombre();
+                }
+
+                new AlertDialog.Builder(DetalleHistoriasActivity.this)
+                        .setTitle("Asignar a Sprint")
+                        .setItems(nombres, (dialog, which) -> {
+                            Sprint seleccionado = sprints.get(which);
+                            asignarHistoriaASprint(seleccionado.getIdSprint());
+                        })
+                        .show();
+            }
+
+            @Override
+            public void onFailure(Call<List<Sprint>> call, Throwable t) {
+                Toast.makeText(DetalleHistoriasActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private void asignarHistoriaASprint(long idSprint) {
+        HistoriaService api = ApiClient.getClient(this).create(HistoriaService.class);
+
+        api.asignarSprint(idHistoria, idSprint).enqueue(new Callback<Historia>() {
+            @Override
+            public void onResponse(Call<Historia> call, Response<Historia> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(DetalleHistoriasActivity.this, "Asignado correctamente", Toast.LENGTH_SHORT).show();
+                    finish(); // vuelve al backlog y refresca
+                } else {
+                    Toast.makeText(DetalleHistoriasActivity.this, "Error al asignar", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Historia> call, Throwable t) {
+                Toast.makeText(DetalleHistoriasActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private void eliminarHistoria() {
         HistoriaService api = ApiClient.getClient(this).create(HistoriaService.class);

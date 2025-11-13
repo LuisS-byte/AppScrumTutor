@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class Sprint {
 
 
-    @SerializedName("id")           // ← se llama "id" en el JSON
+    @SerializedName("id")
     private long idSprint;
 
     @SerializedName("idProyecto")
@@ -16,15 +16,19 @@ public class Sprint {
     private String fechaInicio;
     private String fechaFin;
 
+    @SerializedName("idEstado")
+    private int idEstado;
+
     @SerializedName("estadoDescripcion")
     private String estadoDescripcion;
 
-    // Getters
     public long getIdSprint() { return idSprint; }
     public long getIdProyecto() { return idProyecto; }
     public String getNombre() { return nombre; }
     public String getObjetivo() { return objetivo; }
     public String getFechaInicio() { return fechaInicio; }
     public String getFechaFin() { return fechaFin; }
+
+    public int getIdEstado() { return idEstado; }           // ← NECESARIO
     public String getEstadoDescripcion() { return estadoDescripcion; }
 }

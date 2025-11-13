@@ -93,5 +93,13 @@
             android:layout_marginTop="12dp" />
 
 
+
+        <Button
+            android:id="@+id/btnAsignarSprint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Asignar a Sprint" />
+
+
     </LinearLayout>
 </ScrollView>
