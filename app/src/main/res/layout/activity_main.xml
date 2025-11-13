@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="24dp"
-            android:text="Bienvenido"
+            android:text="@string/titulo_bienvenido"
             android:textSize="26sp"
             android:textStyle="bold"
             android:textColor="#043255" />
@@ -35,7 +35,7 @@
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Correo electrónico"
+            android:hint="@string/hint_correo"
             android:inputType="textEmailAddress"
             android:padding="12dp"
             android:background="#F2F7FA"
@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:hint="Contraseña"
+            android:hint="@string/hint_contrasena"
             android:inputType="textPassword"
             android:padding="12dp"
             android:background="#F2F7FA"
@@ -61,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="¿Olvidaste tu contraseña?"
+            android:text="@string/txt_olvido_contrasena"
             android:textColor="#0A84FF"
             android:textSize="14sp" />
 
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:backgroundTint="#0A84FF"
-            android:text="INICIAR SESIÓN"
+            android:text="@string/btn_iniciar_sesion"
             android:textColor="#FFFFFF"
             android:textStyle="bold" />
 
@@ -82,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Crear una nueva cuenta"
+            android:text="@string/txt_crear_cuenta"
             android:textColor="#0A84FF"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -92,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
-            android:text="O continuar con"
+            android:text="@string/txt_continuar_con"
             android:textSize="14sp"
             android:textColor="#3A4F61" />
 

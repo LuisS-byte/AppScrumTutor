@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-
     android:padding="20dp">
 
     <LinearLayout
@@ -17,7 +16,7 @@
             android:id="@+id/tvTituloHistoria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Historia de Usuario"
+            android:text="@string/titulo_historia"
             android:textStyle="bold"
             android:textSize="22sp"
             android:textColor="#222"
@@ -28,7 +27,7 @@
             android:id="@+id/tvDescripcionHistoria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Descripción detallada de la historia."
+            android:text="@string/descripcion_historia_defecto"
             android:textSize="16sp"
             android:textColor="#444"
             android:paddingBottom="16dp" />
@@ -38,7 +37,7 @@
             android:id="@+id/tvPrioridad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Prioridad: Alta"
+            android:text="@string/prioridad_historia_defecto"
             android:textSize="16sp"
             android:textColor="#1E88E5"
             android:paddingBottom="8dp" />
@@ -48,7 +47,7 @@
             android:id="@+id/tvEstado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Estado: En progreso"
+            android:text="@string/estado_historia_defecto"
             android:textSize="16sp"
             android:textColor="#388E3C"
             android:paddingBottom="8dp" />
@@ -57,7 +56,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Criterios de aceptación"
+            android:text="@string/criterios_aceptacion_titulo"
             android:textStyle="bold"
             android:textSize="18sp"
             android:textColor="#222"
@@ -68,7 +67,7 @@
             android:id="@+id/tvCriteriosAceptacion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="• El usuario debe poder iniciar sesión.\n• La contraseña debe ser validada."
+            android:text="@string/criterios_aceptacion_defecto"
             android:textSize="15sp"
             android:textColor="#555"
             android:paddingBottom="16dp" />
@@ -78,7 +77,7 @@
             android:id="@+id/btnEditarHistoria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Editar historia"
+            android:text="@string/btn_editar_historia"
             android:backgroundTint="@android:color/holo_blue_dark"
             android:textColor="#FFFFFF"
             android:layout_marginTop="20dp" />
@@ -87,19 +86,16 @@
             android:id="@+id/btnEliminarHistoria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Eliminar historia"
+            android:text="@string/btn_eliminar_historia"
             android:backgroundTint="@android:color/holo_red_dark"
             android:textColor="#FFFFFF"
             android:layout_marginTop="12dp" />
-
-
 
         <Button
             android:id="@+id/btnAsignarSprint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Asignar a Sprint" />
-
+            android:text="@string/btn_asignar_sprint" />
 
     </LinearLayout>
 </ScrollView>

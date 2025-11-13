@@ -92,6 +92,96 @@
     <string name="project_end_date_hint">Fecha de fin (YYYY-MM-DD)</string>
 
     <string name="update_project_button">Actualizar Proyecto</string>
+    <string name="app_name">AppScrumTutor</string>
+    <!-- STRINGS NUEVOS PARA LA HISTORIA -->
+    <string name="titulo_crear_historia">Crear Historia de Usuario</string>
+    <string name="hint_titulo_historia">Título de la historia</string>
+    <string name="hint_descripcion_historia">Descripción breve</string>
+    <string name="hint_criterios_historia">Criterios de aceptación</string>
+    <string name="btn_guardar_historia">Guardar historia</string>
+    <string name="titulo_crear_tarea">Crear Tarea</string>
+    <string name="hint_titulo_tarea">Título de la tarea</string>
+    <string name="hint_descripcion_tarea">Descripción</string>
+    <string name="txt_vincular_historia">Vincular con historia (opcional):</string>
+    <string name="hint_fecha_limite">Fecha límite (YYYY-MM-DD)</string>
+    <string name="btn_guardar_tarea">Guardar tarea</string>
+    <string name="titulo_crear_proyecto">Crear nuevo proyecto</string>
+    <string name="hint_nombre_proyecto">Nombre del proyecto</string>
+    <string name="hint_descripcion_proyecto">Descripción</string>
+    <string name="hint_fecha_inicio">Fecha de inicio (YYYY-MM-DD)</string>
+    <string name="hint_fecha_fin">Fecha de fin (YYYY-MM-DD)</string>
+    <string name="btn_crear_proyecto">Crear Proyecto</string>
+    <string name="btn_cancelar">Cancelar</string>
+    <string name="titulo_historia">Historia de Usuario</string>
+    <string name="descripcion_historia_defecto">Descripción detallada de la historia.</string>
+    <string name="prioridad_historia_defecto">Prioridad: Alta</string>
+    <string name="estado_historia_defecto">Estado: En progreso</string>
+    <string name="criterios_aceptacion_titulo">Criterios de aceptación</string>
+    <string name="criterios_aceptacion_defecto">• El usuario debe poder iniciar sesión.\n• La contraseña debe ser validada.</string>
+    <string name="btn_editar_historia">Editar historia</string>
+    <script name="btn_eliminar_historia">Eliminar historia</script>
+    <string name="btn_asignar_sprint">Asignar a Sprint</string>
+    <string name="btn_eliminar_historia">Eliminar historia</string>
+    <string name="titulo_tarea_detalle">Título de la tarea</string>
+    <string name="descripcion_tarea_detalle">Descripción completa de la tarea</string>
+
+    <string name="txt_responsable">👤 Asignado a: -</string>
+    <string name="txt_estado_tarea">📌 Estado: -</string>
+    <string name="txt_fecha_limite_tarea">📅 Fecha límite: -</string>
+    <string name="txt_historia_relacionada">🧩 Historia relacionada: -</string>
+    <string name="txt_sprint_asignado">🏁 Sprint: -</string>
+
+    <string name="btn_editar_tarea">Editar</string>
+    <string name="btn_eliminar_tarea">Eliminar</string>
+
+    <string name="titulo_comentarios">Comentarios</string>
+    <string name="hint_nuevo_comentario">Escribir comentario...</string>
+    <string name="btn_agregar_comentario">Agregar comentario</string>
+    <string name="titulo_tema">Título del tema</string>
+    <string name="contenido_tema">Aquí irá el contenido del tema.</string>
+    <string name="titulo_gestion_sprint">Gestión de Sprint</string>
+    <string name="hint_nombre_sprint">Nombre del sprint</string>
+    <string name="hint_objetivo_sprint">Objetivo del sprint</string>
+    <string name="btn_seleccionar_historias">Seleccionar historias</string>
+    <string name="txt_historias_seleccionadas">Ninguna historia seleccionada</string>
+    <string name="hint_fecha_inicio_sprint">Fecha de inicio (YYYY-MM-DD)</string>
+    <string name="hint_fecha_fin_sprint">Fecha de fin (YYYY-MM-DD)</string>
+    <string name="btn_guardar_sprint">Guardar Sprint</string>
+    <string name="titulo_temas_aprendizaje">Temas de Aprendizaje</string>
+    <string name="titulo_quizzes">Quizzes</string>
+    <string name="titulo_bienvenido">Bienvenido</string>
+    <string name="hint_correo">Correo electrónico</string>
+    <string name="hint_contrasena">Contraseña</string>
+    <string name="txt_olvido_contrasena">¿Olvidaste tu contraseña?</string>
+    <string name="btn_iniciar_sesion">INICIAR SESIÓN</string>
+    <string name="txt_crear_cuenta">Crear una nueva cuenta</string>
+    <string name="txt_continuar_con">O continuar con</string>
+    <string name="titulo_miembros_proyecto">Miembros del Proyecto</string>
+    <string name="btn_agregar_miembro">AGREGAR NUEVO MIEMBRO</string>
+    <string name="titulo_notificaciones">Notificaciones</string>
+    <string name="perfil_nombre_generico">José Mendoza</string>
+    <string name="perfil_correo_generico">jose@correo.com</string>
+    <string name="perfil_rol_generico">Rol: Desarrollador</string>
+    <string name="perfil_estado_generico">Estado: Activo ✅</string>
+
+    <string name="btn_editar_perfil">Editar Perfil</string>
+    <string name="btn_cerrar_sesion">Cerrar Sesión</string>
+    <string name="titulo_proyecto_reservation">Reservation Project</string>
+    <string name="titulo_sprint_actual">Sprint actual: Módulo Autenticación</string>
+    <string name="titulo_proyecto">Proyecto</string>
+    <string name="titulo_tus_proyectos">Tus proyectos</string>
+    <string name="btn_crear_proyecto_home">Crear un proyecto</string>
+    <string name="titulo_crear_cuenta">Crea tu cuenta</string>
+    <string name="hint_nombre_completo">Nombre completo</string>
+    <string name="hint_correo_registro">Correo electrónico</string>
+    <string name="hint_contrasena_registro">Contraseña</string>
+    <string name="hint_confirmar_contrasena">Confirmar contraseña</string>
+
+    <string name="btn_registrarse">Registrarse</string>
+    <string name="txt_ir_login">¿Ya tienes una cuenta? Inicia sesión</string>
+    <string name="titulo_sprints_proyecto">Sprints del proyecto</string>
+    <string name="btn_crear_nuevo_sprint">CREAR NUEVO SPRINT</string>
+    <string name="btn_gestionar_miembros">GESTIONAR MIEMBROS DEL PROYECTO</string>
 
 
     <string-array name="prioridades">

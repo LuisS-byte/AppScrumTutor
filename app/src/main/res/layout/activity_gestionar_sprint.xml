@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Gestión de Sprint"
+            android:text="@string/titulo_gestion_sprint"
             android:textStyle="bold"
             android:textSize="20sp"
             android:paddingBottom="16dp"/>
@@ -23,7 +23,7 @@
             android:id="@+id/etNombreSprint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nombre del sprint"
+            android:hint="@string/hint_nombre_sprint"
             android:inputType="textCapSentences"
             android:padding="12dp" />
 
@@ -32,32 +32,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:hint="Objetivo del sprint"
+            android:hint="@string/hint_objetivo_sprint"
             android:inputType="textMultiLine"
             android:minLines="3"
             android:padding="12dp" />
+
         <Button
             android:id="@+id/btnSeleccionarHistorias"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Seleccionar historias"
+            android:text="@string/btn_seleccionar_historias"
             android:layout_marginTop="12dp" />
 
         <TextView
             android:id="@+id/tvHistoriasSeleccionadas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ninguna historia seleccionada"
+            android:text="@string/txt_historias_seleccionadas"
             android:textSize="14sp"
             android:layout_marginTop="8dp" />
-
 
         <EditText
             android:id="@+id/etFechaInicio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:hint="Fecha de inicio (YYYY-MM-DD)"
+            android:hint="@string/hint_fecha_inicio_sprint"
             android:inputType="date" />
 
         <EditText
@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:hint="Fecha de fin (YYYY-MM-DD)"
+            android:hint="@string/hint_fecha_fin_sprint"
             android:inputType="date" />
 
         <Spinner
@@ -79,7 +79,7 @@
             android:id="@+id/btnGuardarSprint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Guardar Sprint"
+            android:text="@string/btn_guardar_sprint"
             android:layout_marginTop="24dp"
             android:backgroundTint="@android:color/holo_blue_dark"
             android:textColor="#FFFFFF" />

@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Miembros del Proyecto"
+        android:text="@string/titulo_miembros_proyecto"
         android:textStyle="bold"
         android:textSize="22sp"
         android:textColor="#FFFFFF"
@@ -27,13 +27,13 @@
         android:paddingHorizontal="24dp">
 
         <LinearLayout
+            android:id="@+id/layoutMiembros"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="#FFFFFF"
             android:padding="24dp"
-            android:elevation="4dp"
-            android:id="@+id/layoutMiembros"/>
+            android:elevation="4dp"/>
     </ScrollView>
 
     <!-- BOTÓN -->
@@ -41,7 +41,7 @@
         android:id="@+id/btnAgregarMiembro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="AGREGAR NUEVO MIEMBRO"
+        android:text="@string/btn_agregar_miembro"
         android:textColor="#FFFFFF"
         android:backgroundTint="#0A84FF"
         android:textStyle="bold"

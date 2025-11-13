@@ -16,7 +16,7 @@
             android:id="@+id/tvTituloTarea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Título de la tarea"
+            android:text="@string/titulo_tarea_detalle"
             android:textStyle="bold"
             android:textSize="20sp"
             android:textColor="#222"
@@ -27,7 +27,7 @@
             android:id="@+id/tvDescripcionTarea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Descripción completa de la tarea"
+            android:text="@string/descripcion_tarea_detalle"
             android:textSize="15sp"
             android:textColor="#555"
             android:paddingBottom="12dp" />
@@ -37,35 +37,35 @@
             android:id="@+id/tvResponsable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="👤 Asignado a: -"
+            android:text="@string/txt_responsable"
             android:paddingBottom="4dp" />
 
         <TextView
             android:id="@+id/tvEstado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📌 Estado: -"
+            android:text="@string/txt_estado_tarea"
             android:paddingBottom="4dp" />
 
         <TextView
             android:id="@+id/tvFechaLimite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📅 Fecha límite: -"
+            android:text="@string/txt_fecha_limite_tarea"
             android:paddingBottom="4dp" />
 
         <TextView
             android:id="@+id/tvHistoria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🧩 Historia relacionada: -"
+            android:text="@string/txt_historia_relacionada"
             android:paddingBottom="4dp" />
 
         <TextView
             android:id="@+id/tvSprint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🏁 Sprint: -"
+            android:text="@string/txt_sprint_asignado"
             android:paddingBottom="16dp" />
 
         <!-- Botones -->
@@ -81,7 +81,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Editar"
+                android:text="@string/btn_editar_tarea"
                 android:backgroundTint="@android:color/holo_blue_dark"
                 android:textColor="#FFF"
                 android:layout_marginEnd="8dp" />
@@ -91,7 +91,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Eliminar"
+                android:text="@string/btn_eliminar_tarea"
                 android:backgroundTint="@android:color/holo_red_dark"
                 android:textColor="#FFF" />
         </LinearLayout>
@@ -100,7 +100,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Comentarios"
+            android:text="@string/titulo_comentarios"
             android:textStyle="bold"
             android:textSize="16sp"
             android:paddingTop="20dp"
@@ -116,7 +116,7 @@
             android:id="@+id/etNuevoComentario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Escribir comentario..."
+            android:hint="@string/hint_nuevo_comentario"
             android:layout_marginTop="12dp"
             android:padding="10dp"
             android:background="@android:drawable/edit_text" />
@@ -125,7 +125,7 @@
             android:id="@+id/btnAgregarComentario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Agregar comentario"
+            android:text="@string/btn_agregar_comentario"
             android:layout_marginTop="8dp"
             android:backgroundTint="@android:color/holo_green_dark"
             android:textColor="#FFFFFF" />

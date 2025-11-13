@@ -8,12 +8,14 @@
     android:orientation="vertical"
     android:background="#FFFFFF"
     android:padding="16dp">
+
     <include layout="@layout/header" />
+
     <TextView
         android:id="@+id/tvTituloProyecto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sprints del proyecto"
+        android:text="@string/titulo_sprints_proyecto"
         android:textSize="20sp"
         android:textStyle="bold"
         android:paddingBottom="8dp" />
@@ -35,14 +37,15 @@
         android:id="@+id/btnCrearSprint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="CREAR NUEVO SPRINT"
+        android:text="@string/btn_crear_nuevo_sprint"
         android:backgroundTint="@android:color/holo_blue_dark"
         android:textColor="#FFFFFF" />
+
     <Button
         android:id="@+id/btnVerMiembros"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="GESTIONAR MIEMBROS DEL PROYECTO"
+        android:text="@string/btn_gestionar_miembros"
         android:backgroundTint="@android:color/holo_blue_light"
         android:textColor="#FFFFFF"
         android:layout_marginTop="8dp"
@@ -60,4 +63,5 @@
         android:layout_gravity="bottom"
         app:itemIconTint="@color/black"
         app:itemTextColor="@color/black" />
+
 </LinearLayout>

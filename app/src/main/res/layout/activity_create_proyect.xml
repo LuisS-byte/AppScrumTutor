@@ -10,7 +10,6 @@
     android:fitsSystemWindows="true"
     tools:context=".createProyect">
 
-
     <!-- CONTENIDO PRINCIPAL -->
     <ScrollView
         android:layout_width="match_parent"
@@ -26,7 +25,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Crear nuevo proyecto"
+                android:text="@string/titulo_crear_proyecto"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:paddingBottom="16dp"
@@ -36,7 +35,7 @@
                 android:id="@+id/etNombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nombre del proyecto"
+                android:hint="@string/hint_nombre_proyecto"
                 android:inputType="textCapSentences"
                 android:layout_marginBottom="12dp" />
 
@@ -44,7 +43,7 @@
                 android:id="@+id/etDescripcion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Descripción"
+                android:hint="@string/hint_descripcion_proyecto"
                 android:inputType="textMultiLine"
                 android:minHeight="100dp"
                 android:gravity="top"
@@ -54,7 +53,7 @@
                 android:id="@+id/etFechaInicio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Fecha de inicio (YYYY-MM-DD)"
+                android:hint="@string/hint_fecha_inicio"
                 android:focusable="false"
                 android:clickable="true"
                 android:layout_marginBottom="12dp" />
@@ -63,7 +62,7 @@
                 android:id="@+id/etFechaFin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Fecha de fin (YYYY-MM-DD)"
+                android:hint="@string/hint_fecha_fin"
                 android:focusable="false"
                 android:clickable="true"
                 android:layout_marginBottom="20dp" />
@@ -72,7 +71,7 @@
                 android:id="@+id/btnGuardar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Crear Proyecto"
+                android:text="@string/btn_crear_proyecto"
                 android:backgroundTint="@android:color/holo_blue_dark"
                 android:textColor="@android:color/white"
                 android:layout_marginBottom="12dp" />
@@ -81,12 +80,10 @@
                 android:id="@+id/btnCancelar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Cancelar"
+                android:text="@string/btn_cancelar"
                 android:backgroundTint="@android:color/darker_gray"
                 android:textColor="@android:color/white" />
         </LinearLayout>
     </ScrollView>
-
-
 
 </LinearLayout>
