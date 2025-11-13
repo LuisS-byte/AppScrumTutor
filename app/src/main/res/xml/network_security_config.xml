@@ -1,7 +1,7 @@
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
         <!-- Dominio público de Ngrok -->
-          <domain includeSubdomains="true">lon-macropodous-yanira.ngrok-free.dev</domain>
-        <domain includeSubdomains="true">nonimplemental-frowningly-victor.ngrok-free.dev</domain>-->
+        <domain includeSubdomains="true">lon-macropodous-yanira.ngrok-free.dev</domain>
+        <!--<domain includeSubdomains="true">nonimplemental-frowningly-victor.ngrok-free.dev</domain>-->
     </domain-config>
 </network-security-config>
