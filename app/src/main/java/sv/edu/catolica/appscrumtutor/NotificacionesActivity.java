@@ -198,18 +198,17 @@ public class NotificacionesActivity extends AppCompatActivity {
 
     /** PUT para aceptar la invitación **/
     private void aceptarInvitacion(Long idProyecto) {
-        // Primero obtener el miembro correcto para el usuario actual
         sv.edu.catolica.appscrumtutor.miembros.MiembroService miembroService =
                 ApiClient.getClient(this).create(sv.edu.catolica.appscrumtutor.miembros.MiembroService.class);
 
-        miembroService.getMiembros(idProyecto).enqueue(new Callback<List<sv.edu.catolica.appscrumtutor.miembros.Miembro>>() {
+        // 🔹 NUEVO: obtener también pendientes
+        miembroService.getMiembrosPendientes(idProyecto).enqueue(new Callback<List<sv.edu.catolica.appscrumtutor.miembros.Miembro>>() {
             @Override
             public void onResponse(Call<List<sv.edu.catolica.appscrumtutor.miembros.Miembro>> call,
                                    Response<List<sv.edu.catolica.appscrumtutor.miembros.Miembro>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<sv.edu.catolica.appscrumtutor.miembros.Miembro> miembros = response.body();
 
-                    // Buscar el miembro que pertenece al usuario actual
                     sv.edu.catolica.appscrumtutor.miembros.Miembro miembroUsuario = null;
                     for (sv.edu.catolica.appscrumtutor.miembros.Miembro m : miembros) {
                         if (m.getIdUsuario() == idUsuarioActual) {
@@ -223,31 +222,32 @@ public class NotificacionesActivity extends AppCompatActivity {
                         return;
                     }
 
-                    // Ahora sí, actualizar la invitación
                     long idMiembro = miembroUsuario.getIdMiembro();
 
-                    ProyectoMiembroService service = ApiClient.getClient(NotificacionesActivity.this).create(ProyectoMiembroService.class);
+                    ProyectoMiembroService service = ApiClient.getClient(NotificacionesActivity.this)
+                            .create(ProyectoMiembroService.class);
                     ProyectoMiembroInvitacionDTO dto = new ProyectoMiembroInvitacionDTO(true);
 
-                    service.actualizarInvitacion(idProyecto, idMiembro, dto).enqueue(new Callback<sv.edu.catolica.appscrumtutor.miembros.Miembro>() {
-                        @Override
-                        public void onResponse(Call<sv.edu.catolica.appscrumtutor.miembros.Miembro> call,
-                                               Response<sv.edu.catolica.appscrumtutor.miembros.Miembro> response) {
-                            if (response.isSuccessful()) {
-                                Toast.makeText(NotificacionesActivity.this, "Invitación aceptada correctamente", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(NotificacionesActivity.this, "Error al aceptar invitación", Toast.LENGTH_SHORT).show();
-                            }
-                        }
+                    service.actualizarInvitacion(idProyecto, idMiembro, dto)
+                            .enqueue(new Callback<sv.edu.catolica.appscrumtutor.miembros.Miembro>() {
+                                @Override
+                                public void onResponse(Call<sv.edu.catolica.appscrumtutor.miembros.Miembro> call,
+                                                       Response<sv.edu.catolica.appscrumtutor.miembros.Miembro> response) {
+                                    if (response.isSuccessful()) {
+                                        Toast.makeText(NotificacionesActivity.this, "Invitación aceptada correctamente", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(NotificacionesActivity.this, "Error al aceptar invitación", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
 
-                        @Override
-                        public void onFailure(Call<sv.edu.catolica.appscrumtutor.miembros.Miembro> call, Throwable t) {
-                            Toast.makeText(NotificacionesActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                                @Override
+                                public void onFailure(Call<sv.edu.catolica.appscrumtutor.miembros.Miembro> call, Throwable t) {
+                                    Toast.makeText(NotificacionesActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
                 } else {
-                    Toast.makeText(NotificacionesActivity.this, "Error al obtener miembros del proyecto", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NotificacionesActivity.this, "Error al obtener invitaciones pendientes", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -257,5 +257,6 @@ public class NotificacionesActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }

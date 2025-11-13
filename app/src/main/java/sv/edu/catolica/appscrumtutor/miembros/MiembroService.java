@@ -12,5 +12,7 @@ public interface MiembroService {
     Call<List<Miembro>> getMiembros(@Path("idProyecto") long idProyecto);
     @POST("api/proyectos/{idProyecto}/miembros")
     Call<Miembro> agregarMiembro(@Path("idProyecto") long idProyecto, @Body ProyectoMiembroCreateDTO dto);
+    @GET("api/proyectos/{idProyecto}/miembros/pendientes")
+    Call<List<Miembro>> getMiembrosPendientes(@Path("idProyecto") long idProyecto);
 
 }
