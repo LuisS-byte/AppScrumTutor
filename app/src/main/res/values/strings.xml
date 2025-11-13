@@ -26,5 +26,14 @@
         <item>Desarrollador</item>
     </string-array>
 
+    <string-array name="estado_historia">
+        <item>NUEVA</item>
+        <item>EN_ANALISIS</item>
+        <item>APROBADA</item>
+        <item>EN_DESARROLLO</item>
+        <item>EN_PRUEBA</item>
+        <item>HECHA</item>
+    </string-array>
+
 
 </resources>

@@ -30,16 +30,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
 import sv.edu.catolica.appscrumtutor.network.AuthResponse;
 import sv.edu.catolica.appscrumtutor.network.AuthService;
 import sv.edu.catolica.appscrumtutor.network.JwtUtils;
-
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "GoogleLogin";
     private GoogleSignInClient googleSignInClient;
 
     // Tu Web Client ID (mismo del backend)
-    private static final String WEB_CLIENT_ID = "883005246975-641erk7621jujh9854kk96ecb9d4fh7u.apps.googleusercontent.com";
+    private static final String WEB_CLIENT_ID = "513694165460-dh23r13rstm014momd7svpn4gveqso6f.apps.googleusercontent.com";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendTokenToBackend(String idToken) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://lon-macropodous-yanira.ngrok-free.dev/") //backend expuesto
+                .baseUrl("https://nonimplemental-frowningly-victor.ngrok-free.dev/") //backend expuesto
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

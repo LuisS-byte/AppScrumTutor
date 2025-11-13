@@ -29,7 +29,7 @@ import sv.edu.catolica.appscrumtutor.sprint.HistoriaService;
 
 public class BacklogFrament extends Fragment {
 
-    private LinearLayout layoutSprintTareas, layoutBacklogTareas;
+    private LinearLayout  layoutBacklogTareas;
     private Button btnCrearHistoria;
     private long idProyecto = -1;
 
@@ -47,7 +47,7 @@ public class BacklogFrament extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        layoutSprintTareas = view.findViewById(R.id.layoutSprintTareas);
+
         layoutBacklogTareas = view.findViewById(R.id.layoutBacklogTareas);
         btnCrearHistoria = view.findViewById(R.id.btnCrearHistoria);
 
@@ -70,21 +70,19 @@ public class BacklogFrament extends Fragment {
     }
 
     private void cargarHistoriasDesdeBackend() {
-        if (!isAdded() || getContext() == null) return;
-
         HistoriaService service = ApiClient.getClient(getContext()).create(HistoriaService.class);
 
         service.listarPorProyecto(idProyecto).enqueue(new Callback<List<Historia>>() {
             @Override
             public void onResponse(Call<List<Historia>> call, Response<List<Historia>> response) {
                 if (!isAdded()) return;
+
+                layoutBacklogTareas.removeAllViews();
+
                 if (response.isSuccessful() && response.body() != null) {
-                    layoutBacklogTareas.removeAllViews();
                     for (Historia h : response.body()) {
                         agregarHistoria(h);
                     }
-                } else {
-                    Toast.makeText(getContext(), "No se pudieron cargar las historias", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -96,9 +94,7 @@ public class BacklogFrament extends Fragment {
         });
     }
 
-
     private void agregarHistoria(Historia historia) {
-        if (!isAdded() || getContext() == null) return;
 
         View historiaView = LayoutInflater.from(getContext())
                 .inflate(R.layout.item_historia, layoutBacklogTareas, false);
@@ -109,19 +105,29 @@ public class BacklogFrament extends Fragment {
 
         tvTitulo.setText(historia.getTitulo());
         tvDescripcion.setText(historia.getDescripcion());
-        tvPrioridad.setText("Prioridad: " +
-                (historia.getPrioridad() != null ? historia.getPrioridad() : "Sin prioridad"));
+        tvPrioridad.setText("Prioridad: " + historia.getPrioridad());
 
         historiaView.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), DetalleHistoriasActivity.class);
+            intent.putExtra("idHistoria", historia.getId());
+            intent.putExtra("idHistoria", historia.getId());
             intent.putExtra("titulo", historia.getTitulo());
             intent.putExtra("descripcion", historia.getDescripcion());
-            intent.putExtra("prioridad",
-                    historia.getPrioridad() != null ? historia.getPrioridad() : "N/A");
+            intent.putExtra("prioridad", historia.getPrioridad());
+            intent.putExtra("estado", historia.getEstado());
+            intent.putExtra("criterios", historia.getCriteriosAceptacion());
+
             startActivity(intent);
         });
 
         layoutBacklogTareas.addView(historiaView);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (idProyecto != -1) {
+            cargarHistoriasDesdeBackend();
+        }
+    }
 }

@@ -11,52 +11,117 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+
+import retrofit2.Response;
 import sv.edu.catolica.appscrumtutor.R;
-public class CalendarioFrament extends Fragment {
+import sv.edu.catolica.appscrumtutor.network.ApiClient;
+import sv.edu.catolica.appscrumtutor.sprint.Tarea;
+import sv.edu.catolica.appscrumtutor.sprint.TareaService;
 
-    private TextView tvEventos;
+public class CalendarioFrament extends Fragment {
     private CalendarView calendarView;
-    private List<String> tareasConFecha;
+    private TextView tvEventos;
+
+    private long idSprint;
+
+    private String fechaInicioSprint;
+    private String fechaFinSprint;
+    private Map<String, List<Tarea>> mapaTareasPorFecha = new HashMap<>();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // Inflamos la vista del fragmento
+
         View view = inflater.inflate(R.layout.fragment_calendario, container, false);
 
-        // Referencias a los elementos del XML
-        tvEventos = view.findViewById(R.id.tvEventos);
         calendarView = view.findViewById(R.id.calendarView);
+        tvEventos = view.findViewById(R.id.tvEventos);
 
-        // Simulación de datos con fechas (luego se reemplaza por datos reales)
-        tareasConFecha = new ArrayList<>();
-        tareasConFecha.add("2025-11-10 - Diseñar interfaz de login");
-        tareasConFecha.add("2025-11-12 - Revisar backlog");
-        tareasConFecha.add("2025-11-15 - Entregar sprint");
+        // Obtener argumentos
+        idSprint = getArguments().getLong("idSprint", -1);
+        fechaInicioSprint = getArguments().getString("fechaInicioSprint", "");
+        fechaFinSprint = getArguments().getString("fechaFinSprint", "");
 
-        // Evento al seleccionar una fecha
+        cargarTareasDesdeBackend();
+
+        // Cuando cambia la fecha seleccionada
         calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
-            String fechaSeleccionada = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
-            StringBuilder eventos = new StringBuilder("📅 " + fechaSeleccionada + "\n\n");
-            for (String t : tareasConFecha) {
-                if (t.startsWith(fechaSeleccionada)) {
-                    eventos.append("• ").append(t.substring(11)).append("\n");
+
+            String fecha = String.format(Locale.getDefault(),
+                    "%04d-%02d-%02d", year, month + 1, dayOfMonth);
+
+            mostrarEventos(fecha);
+        });
+
+        // Mostrar rango del sprint al inicio
+        tvEventos.setText("📌 Sprint del " + fechaInicioSprint + " al " + fechaFinSprint);
+
+        return view;
+    }
+
+    private void cargarTareasDesdeBackend() {
+        TareaService service = ApiClient.getClient(requireContext()).create(TareaService.class);
+
+        service.listarPorSprint(idSprint).enqueue(new Callback<List<Tarea>>() {
+            @Override
+            public void onResponse(Call<List<Tarea>> call, Response<List<Tarea>> response) {
+                if (!response.isSuccessful() || response.body() == null) return;
+
+                mapaTareasPorFecha.clear();
+
+                for (Tarea t : response.body()) {
+                    String fecha = t.getFechaLimite();
+                    if (fecha == null || fecha.isEmpty()) continue;
+
+                    mapaTareasPorFecha
+                            .computeIfAbsent(fecha, k -> new ArrayList<>())
+                            .add(t);
                 }
             }
 
-            if (eventos.toString().equals("📅 " + fechaSeleccionada + "\n\n")) {
-                eventos.append("Sin tareas programadas.");
+            @Override
+            public void onFailure(Call<List<Tarea>> call, Throwable t) {
+                t.printStackTrace();
             }
-
-            tvEventos.setText(eventos.toString());
         });
+    }
 
-        return view;
+    private void mostrarEventos(String fecha) {
+
+        // Mostrar advertencia si la fecha está fuera del sprint
+        if (!estaDentroDelSprint(fecha)) {
+            tvEventos.setText("📅 " + fecha + "\n\n⚠️ Fuera del rango del sprint.");
+            return;
+        }
+
+        List<Tarea> tareas = mapaTareasPorFecha.get(fecha);
+
+        if (tareas == null || tareas.isEmpty()) {
+            tvEventos.setText("📅 " + fecha + "\n\nSin tareas programadas.");
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder("📅 " + fecha + "\n\n");
+
+        for (Tarea t : tareas)
+            sb.append("• ").append(t.getTitulo()).append("\n");
+
+        tvEventos.setText(sb.toString());
+    }
+
+    private boolean estaDentroDelSprint(String fecha) {
+        return fecha.compareTo(fechaInicioSprint) >= 0 &&
+                fecha.compareTo(fechaFinSprint) <= 0;
     }
 }

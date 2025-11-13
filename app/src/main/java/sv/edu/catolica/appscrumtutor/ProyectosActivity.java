@@ -122,10 +122,9 @@ public class ProyectosActivity extends AppCompatActivity {
 
         // → Ver sprints
         btnIr.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SprintsActivity.class);
+            Intent intent = new Intent(this, ProyectoHomeActivity.class);
             intent.putExtra("idProyecto", proyecto.getId());
             intent.putExtra("nombreProyecto", proyecto.getNombre());
-            intent.putExtra("descripcionProyecto", proyecto.getDescripcion());
             startActivity(intent);
         });
 

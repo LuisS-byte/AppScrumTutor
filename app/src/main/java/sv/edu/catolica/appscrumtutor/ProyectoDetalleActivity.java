@@ -79,13 +79,17 @@ public class ProyectoDetalleActivity extends AppCompatActivity {
         }
 
         // Configurar adapter
-        viewPager.setAdapter(new AdapterProyecto(this, idProyecto, idSprint));
+        String fechaInicio = getIntent().getStringExtra("fechaInicioSprint");
+        String fechaFin = getIntent().getStringExtra("fechaFinSprint");
+
+        viewPager.setAdapter(new AdapterProyecto(this, idProyecto, idSprint, fechaInicio, fechaFin));
+
         viewPager.setUserInputEnabled(false);
 
         // Tabs
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             switch (position) {
-                case 0: tab.setText("Backlog"); break;
+                case 0: tab.setText("Backlog Sprints"); break;
                 case 1: tab.setText("Actividades"); break;
                 case 2: tab.setText("Calendario"); break;
             }
