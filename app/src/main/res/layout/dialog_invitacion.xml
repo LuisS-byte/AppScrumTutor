@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tvTituloInvitacion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Invitación al proyecto"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tvNombreProyectoInvitacion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Proyecto X"
+        android:textSize="16sp"
+        android:paddingBottom="16dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnRechazar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rechazar"
+            android:backgroundTint="#E57373"
+            android:textColor="#FFF" />
+
+        <Button
+            android:id="@+id/btnAceptar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aceptar"
+            android:layout_marginStart="10dp"
+            android:backgroundTint="#4CAF50"
+            android:textColor="#FFF" />
+    </LinearLayout>
+</LinearLayout>

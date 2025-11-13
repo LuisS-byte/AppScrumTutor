@@ -4,11 +4,9 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -24,13 +22,18 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import sv.edu.catolica.appscrumtutor.miembros.ProyectoMiembroInvitacionDTO;
+import sv.edu.catolica.appscrumtutor.miembros.ProyectoMiembroService;
 import sv.edu.catolica.appscrumtutor.network.ApiClient;
 import sv.edu.catolica.appscrumtutor.proyecto.Notificacion;
 import sv.edu.catolica.appscrumtutor.proyecto.NotificacionService;
+import sv.edu.catolica.appscrumtutor.proyecto.Proyecto;
+import sv.edu.catolica.appscrumtutor.proyecto.ProyectoService;
 
 public class NotificacionesActivity extends AppCompatActivity {
 
     private LinearLayout layoutNotificaciones;
+    private long idUsuarioActual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +54,11 @@ public class NotificacionesActivity extends AppCompatActivity {
         HeaderController.setup(this);
         NavController.setup(this);
 
-        cargarNotificacionesNoLeidas();
+        obtenerUsuarioDesdeJWT();
     }
 
-    private void cargarNotificacionesNoLeidas() {
+    /** Extrae el ID del usuario actual desde el JWT **/
+    private void obtenerUsuarioDesdeJWT() {
         try {
             String token = getSharedPreferences("ScrumTutorPrefs", MODE_PRIVATE).getString("jwt", null);
             if (token == null || token.isEmpty()) {
@@ -62,49 +66,78 @@ public class NotificacionesActivity extends AppCompatActivity {
                 return;
             }
 
-            // Decodificar el payload del token para obtener uid
             String[] partes = token.split("\\.");
             if (partes.length < 2) return;
+
             String payloadJson = new String(Base64.decode(partes[1], Base64.URL_SAFE), StandardCharsets.UTF_8);
             JSONObject payload = new JSONObject(payloadJson);
-            long userId = payload.getLong("uid");
+            idUsuarioActual = payload.getLong("uid");
 
-            NotificacionService service = ApiClient.getClient(this).create(NotificacionService.class);
-            service.getByUsuario(userId).enqueue(new Callback<List<Notificacion>>() {
-                @Override
-                public void onResponse(Call<List<Notificacion>> call, Response<List<Notificacion>> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        layoutNotificaciones.removeAllViews();
-                        List<Notificacion> notificaciones = response.body();
-
-                        boolean hayNoLeidas = false;
-                        for (Notificacion n : notificaciones) {
-                            if (!n.isLeido()) { // solo las no leídas
-                                agregarNotificacion("📢 Notificación", n.getMensaje(), n.getFechaCreacion());
-                                hayNoLeidas = true;
-                            }
-                        }
-
-                        if (!hayNoLeidas) {
-                            agregarNotificacion("Sin notificaciones nuevas", "No tienes mensajes pendientes", "");
-                        }
-                    } else {
-                        Toast.makeText(NotificacionesActivity.this, "Error al cargar notificaciones", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<Notificacion>> call, Throwable t) {
-                    Toast.makeText(NotificacionesActivity.this, "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-
+            cargarNotificacionesNoLeidas();
         } catch (Exception e) {
             Toast.makeText(this, "Error al procesar token: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void agregarNotificacion(String titulo, String mensaje, String fecha) {
+    /** Carga las notificaciones del usuario actual **/
+    private void cargarNotificacionesNoLeidas() {
+        NotificacionService service = ApiClient.getClient(this).create(NotificacionService.class);
+        service.getByUsuario(idUsuarioActual).enqueue(new Callback<List<Notificacion>>() {
+            @Override
+            public void onResponse(Call<List<Notificacion>> call, Response<List<Notificacion>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    layoutNotificaciones.removeAllViews();
+                    List<Notificacion> notificaciones = response.body();
+
+                    boolean hayNoLeidas = false;
+                    for (Notificacion n : notificaciones) {
+                        if (!n.isLeido()) { // solo las no leídas
+                            agregarNotificacion(n);
+                            hayNoLeidas = true;
+                        }
+                    }
+
+                    if (!hayNoLeidas) {
+                        agregarMensajeVacio("Sin notificaciones nuevas", "No tienes mensajes pendientes");
+                    }
+                } else {
+                    Toast.makeText(NotificacionesActivity.this, "Error al cargar notificaciones", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Notificacion>> call, Throwable t) {
+                Toast.makeText(NotificacionesActivity.this, "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /** Muestra cada notificación **/
+    private void agregarNotificacion(Notificacion n) {
+        View view = LayoutInflater.from(this).inflate(R.layout.item_notificacion, layoutNotificaciones, false);
+
+        TextView tvTitulo = view.findViewById(R.id.tvTituloNoti);
+        TextView tvMensaje = view.findViewById(R.id.tvMensajeNoti);
+        TextView tvFecha = view.findViewById(R.id.tvFechaNoti);
+
+        tvTitulo.setText(n.getIdTipo() == 5 ? "Invitación a proyecto" : "📢 Notificación");
+        tvMensaje.setText(n.getMensaje());
+        tvFecha.setText("📅 " + n.getFechaCreacion());
+
+        // Si es tipo INVITACIÓN → mostrar modal
+        view.setOnClickListener(v -> {
+            if (n.getIdTipo() == 5 && n.getIdProyecto() != null) {
+                mostrarModalInvitacion(n.getIdProyecto());
+            } else {
+                Toast.makeText(this, "Notificación normal", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        layoutNotificaciones.addView(view);
+    }
+
+    /** Muestra mensaje cuando no hay notificaciones **/
+    private void agregarMensajeVacio(String titulo, String mensaje) {
         View notiView = LayoutInflater.from(this).inflate(R.layout.item_notificacion, layoutNotificaciones, false);
 
         TextView tvTitulo = notiView.findViewById(R.id.tvTituloNoti);
@@ -113,8 +146,116 @@ public class NotificacionesActivity extends AppCompatActivity {
 
         tvTitulo.setText(titulo);
         tvMensaje.setText(mensaje);
-        tvFecha.setText("📅 " + fecha);
+        tvFecha.setText("");
 
         layoutNotificaciones.addView(notiView);
     }
+
+    /** Muestra el modal con los datos del proyecto **/
+    private void mostrarModalInvitacion(Long idProyecto) {
+        ProyectoService proyectoService = ApiClient.getClient(this).create(ProyectoService.class);
+        proyectoService.getById(idProyecto).enqueue(new Callback<Proyecto>() {
+            @Override
+            public void onResponse(Call<Proyecto> call, Response<Proyecto> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Proyecto proyecto = response.body();
+
+                    View dialogView = LayoutInflater.from(NotificacionesActivity.this)
+                            .inflate(R.layout.dialog_invitacion, null);
+                    TextView tvNombre = dialogView.findViewById(R.id.tvNombreProyectoInvitacion);
+                    tvNombre.setText(proyecto.getNombre());
+
+                    AlertDialog dialog = new AlertDialog.Builder(NotificacionesActivity.this)
+                            .setView(dialogView)
+                            .setCancelable(true)
+                            .create();
+
+                    Button btnAceptar = dialogView.findViewById(R.id.btnAceptar);
+                    Button btnRechazar = dialogView.findViewById(R.id.btnRechazar);
+
+                    btnAceptar.setOnClickListener(v -> {
+                        aceptarInvitacion(idProyecto);
+                        dialog.dismiss();
+                    });
+
+                    btnRechazar.setOnClickListener(v -> {
+                        Toast.makeText(NotificacionesActivity.this, "Invitación rechazada", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    });
+
+                    dialog.show();
+                } else {
+                    Toast.makeText(NotificacionesActivity.this, "Proyecto no encontrado", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Proyecto> call, Throwable t) {
+                Toast.makeText(NotificacionesActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /** PUT para aceptar la invitación **/
+    private void aceptarInvitacion(Long idProyecto) {
+        // Primero obtener el miembro correcto para el usuario actual
+        sv.edu.catolica.appscrumtutor.miembros.MiembroService miembroService =
+                ApiClient.getClient(this).create(sv.edu.catolica.appscrumtutor.miembros.MiembroService.class);
+
+        miembroService.getMiembros(idProyecto).enqueue(new Callback<List<sv.edu.catolica.appscrumtutor.miembros.Miembro>>() {
+            @Override
+            public void onResponse(Call<List<sv.edu.catolica.appscrumtutor.miembros.Miembro>> call,
+                                   Response<List<sv.edu.catolica.appscrumtutor.miembros.Miembro>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<sv.edu.catolica.appscrumtutor.miembros.Miembro> miembros = response.body();
+
+                    // Buscar el miembro que pertenece al usuario actual
+                    sv.edu.catolica.appscrumtutor.miembros.Miembro miembroUsuario = null;
+                    for (sv.edu.catolica.appscrumtutor.miembros.Miembro m : miembros) {
+                        if (m.getIdUsuario() == idUsuarioActual) {
+                            miembroUsuario = m;
+                            break;
+                        }
+                    }
+
+                    if (miembroUsuario == null) {
+                        Toast.makeText(NotificacionesActivity.this, "No se encontró tu invitación en este proyecto", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // Ahora sí, actualizar la invitación
+                    long idMiembro = miembroUsuario.getIdMiembro();
+
+                    ProyectoMiembroService service = ApiClient.getClient(NotificacionesActivity.this).create(ProyectoMiembroService.class);
+                    ProyectoMiembroInvitacionDTO dto = new ProyectoMiembroInvitacionDTO(true);
+
+                    service.actualizarInvitacion(idProyecto, idMiembro, dto).enqueue(new Callback<sv.edu.catolica.appscrumtutor.miembros.Miembro>() {
+                        @Override
+                        public void onResponse(Call<sv.edu.catolica.appscrumtutor.miembros.Miembro> call,
+                                               Response<sv.edu.catolica.appscrumtutor.miembros.Miembro> response) {
+                            if (response.isSuccessful()) {
+                                Toast.makeText(NotificacionesActivity.this, "Invitación aceptada correctamente", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(NotificacionesActivity.this, "Error al aceptar invitación", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<sv.edu.catolica.appscrumtutor.miembros.Miembro> call, Throwable t) {
+                            Toast.makeText(NotificacionesActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } else {
+                    Toast.makeText(NotificacionesActivity.this, "Error al obtener miembros del proyecto", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<sv.edu.catolica.appscrumtutor.miembros.Miembro>> call, Throwable t) {
+                Toast.makeText(NotificacionesActivity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
