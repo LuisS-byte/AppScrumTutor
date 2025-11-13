@@ -61,9 +61,7 @@ public class MiembrosActivity extends AppCompatActivity {
         btnAgregarMiembro.setOnClickListener(v -> mostrarDialogoAgregarMiembro());
     }
 
-    /** ───────────────────────────
-     *   Muestra el modal para agregar miembro
-     *  ─────────────────────────── */
+    /** Mostrar modal para agregar miembro **/
     private void mostrarDialogoAgregarMiembro() {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_agregar_miembro, null);
         EditText etCorreo = dialogView.findViewById(R.id.etCorreoMiembro);
@@ -124,9 +122,7 @@ public class MiembrosActivity extends AppCompatActivity {
         });
     }
 
-    /** ───────────────────────────
-     *   Lógica para agregar miembro y enviar notificación
-     *  ─────────────────────────── */
+    /** Agregar miembro y enviar notificación **/
     private void agregarMiembroYNotificar(String correo, long idRol) {
         UsuarioService usuarioService = ApiClient.getClient(this).create(UsuarioService.class);
 
@@ -173,13 +169,13 @@ public class MiembrosActivity extends AppCompatActivity {
         });
     }
 
-    /** 🔔 Crea una notificación tipo INVITACIÓN (id_tipo = 5) */
+    /** Crear notificación de invitación **/
     private void crearNotificacionInvitacion(Long usuarioId) {
         NotificacionService notifService = ApiClient.getClient(this).create(NotificacionService.class);
         NotificacionCreateDTO notif = new NotificacionCreateDTO();
         notif.setIdUsuario(usuarioId);
         notif.setIdTipo(5);
-        notif.setIdProyecto(idProyecto); // nuevo: relacionar con el proyecto actual
+        notif.setIdProyecto(idProyecto);
         notif.setMensaje("Has sido invitado a un nuevo proyecto");
 
         notifService.crearNotificacion(notif).enqueue(new Callback<Notificacion>() {
@@ -200,7 +196,7 @@ public class MiembrosActivity extends AppCompatActivity {
         });
     }
 
-    /**  Cargar lista de miembros actuales */
+    /** Cargar lista de miembros **/
     private void cargarMiembros() {
         MiembroService service = ApiClient.getClient(this).create(MiembroService.class);
         service.getMiembros(idProyecto).enqueue(new Callback<List<Miembro>>() {
@@ -210,8 +206,7 @@ public class MiembrosActivity extends AppCompatActivity {
                     layoutMiembros.removeAllViews();
                     List<Miembro> miembros = response.body();
                     if (miembros.isEmpty()) mostrarSinMiembros();
-                    else for (Miembro m : miembros)
-                        agregarMiembro(m.getUsuarioNombre(), m.getRolDescripcion(), "Activo");
+                    else for (Miembro m : miembros) agregarMiembro(m);
                 } else {
                     Toast.makeText(MiembrosActivity.this, "Error al cargar miembros", Toast.LENGTH_SHORT).show();
                 }
@@ -233,22 +228,49 @@ public class MiembrosActivity extends AppCompatActivity {
         layoutMiembros.addView(msg);
     }
 
-    private void agregarMiembro(String nombre, String rol, String estado) {
+    /** Agregar miembro al layout con botón eliminar **/
+    private void agregarMiembro(Miembro miembro) {
         View view = LayoutInflater.from(this).inflate(R.layout.item_miembro, layoutMiembros, false);
         TextView tvNombre = view.findViewById(R.id.tvNombreMiembro);
         TextView tvRol = view.findViewById(R.id.tvRolMiembro);
         TextView tvEstado = view.findViewById(R.id.tvEstadoMiembro);
         Button btnEliminar = view.findViewById(R.id.btnEliminarMiembro);
 
-        tvNombre.setText(nombre);
-        tvRol.setText("Rol: " + rol);
-        tvEstado.setText(estado);
-        tvEstado.setTextColor(estado.equalsIgnoreCase("inactivo") ? 0xFFF44336 : 0xFF4CAF50);
+        tvNombre.setText(miembro.getUsuarioNombre());
+        tvRol.setText("Rol: " + miembro.getRolDescripcion());
+        tvEstado.setText("Activo");
+        tvEstado.setTextColor(0xFF4CAF50);
 
-        btnEliminar.setOnClickListener(v ->
-                Toast.makeText(this, "Eliminar miembro pendiente", Toast.LENGTH_SHORT).show()
-        );
+        btnEliminar.setOnClickListener(v -> eliminarMiembro(miembro.getIdMiembro()));
 
         layoutMiembros.addView(view);
+    }
+
+    /** Lógica para eliminar un miembro **/
+    private void eliminarMiembro(Long idMiembro) {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirmar eliminación")
+                .setMessage("¿Deseas eliminar este miembro del proyecto?")
+                .setPositiveButton("Sí", (dialog, which) -> {
+                    MiembroService service = ApiClient.getClient(this).create(MiembroService.class);
+                    service.eliminarMiembro(idProyecto, idMiembro).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if (response.isSuccessful()) {
+                                Toast.makeText(MiembrosActivity.this, "Miembro eliminado correctamente", Toast.LENGTH_SHORT).show();
+                                cargarMiembros();
+                            } else {
+                                Toast.makeText(MiembrosActivity.this, "Error al eliminar miembro", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Toast.makeText(MiembrosActivity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 }

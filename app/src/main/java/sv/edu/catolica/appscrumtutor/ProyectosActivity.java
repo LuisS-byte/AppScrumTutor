@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -62,11 +63,8 @@ public class ProyectosActivity extends AppCompatActivity {
         cargarProyectosDesdeBackend();
     }
 
-    // =====================================================
-    // Cargar proyectos del backend (con verificación de JWT)
-    // =====================================================
+    /** 🔹 Cargar proyectos del backend **/
     private void cargarProyectosDesdeBackend() {
-        // Recuperar JWT guardado en SharedPreferences
         String jwt = getSharedPreferences("ScrumTutorPrefs", MODE_PRIVATE)
                 .getString("jwt", null);
 
@@ -105,9 +103,7 @@ public class ProyectosActivity extends AppCompatActivity {
         });
     }
 
-    // =====================================================
-    // Agregar cada proyecto visualmente con botones extra
-    // =====================================================
+    /** 🔹 Mostrar proyecto individual **/
     private void agregarProyecto(Proyecto proyecto) {
         View view = LayoutInflater.from(this).inflate(R.layout.item_proyecto, layoutProjects, false);
 
@@ -135,33 +131,44 @@ public class ProyectosActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // 🗑 Eliminar proyecto
-        btnEliminar.setOnClickListener(v -> {
-            ProyectoService service = ApiClient.getClient(this).create(ProyectoService.class);
-            service.deleteProyecto(proyecto.getId()).enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        Toast.makeText(ProyectosActivity.this, "Proyecto eliminado correctamente", Toast.LENGTH_SHORT).show();
-                        cargarProyectosDesdeBackend(); // Refrescar lista
-                    } else {
-                        Toast.makeText(ProyectosActivity.this, "Error al eliminar proyecto", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Toast.makeText(ProyectosActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        });
+        // 🗑 Eliminar proyecto con confirmación
+        btnEliminar.setOnClickListener(v -> confirmarEliminacionProyecto(proyecto));
 
         layoutProjects.addView(view);
     }
 
-    // =====================================================
-    // Mensaje si no hay proyectos
-    // =====================================================
+    /** 🔹 Confirmar antes de eliminar **/
+    private void confirmarEliminacionProyecto(Proyecto proyecto) {
+        new AlertDialog.Builder(this)
+                .setTitle("Eliminar proyecto")
+                .setMessage("¿Deseas eliminar el proyecto \"" + proyecto.getNombre() + "\"?\nEsta acción no se puede deshacer.")
+                .setPositiveButton("Sí", (dialog, which) -> eliminarProyecto(proyecto))
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    /** 🔹 Lógica para eliminar proyecto **/
+    private void eliminarProyecto(Proyecto proyecto) {
+        ProyectoService service = ApiClient.getClient(this).create(ProyectoService.class);
+        service.deleteProyecto(proyecto.getId()).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(ProyectosActivity.this, "Proyecto eliminado correctamente", Toast.LENGTH_SHORT).show();
+                    cargarProyectosDesdeBackend();
+                } else {
+                    Toast.makeText(ProyectosActivity.this, "Error al eliminar proyecto", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(ProyectosActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /** 🔹 Mostrar mensaje si no hay proyectos **/
     private void mostrarSinProyectos() {
         TextView msg = new TextView(this);
         msg.setText("No tienes proyectos");
@@ -171,9 +178,7 @@ public class ProyectosActivity extends AppCompatActivity {
         layoutProjects.addView(msg);
     }
 
-    // =====================================================
-    // Método alternativo para vincular con layout XML
-    // =====================================================
+    /** 🔹 Método alternativo para vincular desde layout XML **/
     public void CrearProyecto(View view) {
         Intent intent = new Intent(this, createProyect.class);
         startActivity(intent);
