@@ -23,7 +23,7 @@
             android:id="@+id/tvNombreSprint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sprint_name_sample"
+            android:text="Sprint 1"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="#043255" />
@@ -33,7 +33,7 @@
             android:id="@+id/tvEstado"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sprint_status_active"
+            android:text="Activo"
             android:textColor="#4CAF50"
             android:textSize="14sp"
             android:paddingTop="4dp" />
@@ -43,7 +43,7 @@
             android:id="@+id/tvFechas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sprint_dates_sample"
+            android:text="📅 16/10 - 31/10"
             android:textColor="#3A4F61"
             android:textSize="14sp"
             android:paddingTop="4dp" />
@@ -63,7 +63,7 @@
                 android:id="@+id/btnVerSprint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sprint_view"
+                android:text="VER"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#0A84FF" />
 
@@ -71,7 +71,7 @@
                 android:id="@+id/btnEditarSprint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sprint_edit"
+                android:text="EDITAR"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#043255" />
 

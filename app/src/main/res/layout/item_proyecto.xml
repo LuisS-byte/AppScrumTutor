@@ -21,7 +21,7 @@
             android:id="@+id/tvNombreProyecto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/project_item_title"
+            android:text="Nombre del Proyecto"
             android:textStyle="bold"
             android:textSize="18sp"
             android:textColor="@color/black"/>
@@ -30,7 +30,7 @@
             android:id="@+id/tvDescripcionProyecto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/project_item_description"
+            android:text="Descripción corta del proyecto"
             android:textSize="14sp"
             android:textColor="#666666"/>
     </LinearLayout>
@@ -45,7 +45,7 @@
             android:id="@+id/btnIrProyecto"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:text="@string/project_go"
+            android:text="➡️"
             android:backgroundTint="@android:color/holo_blue_dark"
             android:textColor="@android:color/white"
             android:layout_marginEnd="6dp" />
@@ -54,7 +54,7 @@
             android:id="@+id/btnEditarProyecto"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:text="@string/project_edit"
+            android:text="✏️"
             android:backgroundTint="@android:color/holo_green_dark"
             android:textColor="@android:color/white"
             android:layout_marginEnd="6dp" />
@@ -63,7 +63,7 @@
             android:id="@+id/btnEliminarProyecto"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:text="@string/project_delete"
+            android:text="🗑️"
             android:backgroundTint="@android:color/holo_red_dark"
             android:textColor="@android:color/white" />
     </LinearLayout>

@@ -18,7 +18,7 @@
         android:background="#FFFFFF"
         android:drawableStart="@android:drawable/ic_menu_search"
         android:drawablePadding="8dp"
-        android:hint="@string/search_hint"
+        android:hint="Buscar"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:paddingStart="14dp"
@@ -38,6 +38,6 @@
         android:src="@drawable/ic_launcher_background"
         android:scaleType="centerCrop"
         android:padding="4dp"
-        android:contentDescription="@string/profile_desc"
+        android:contentDescription="Perfil"
         android:backgroundTint="#F2F7FA" />
 </LinearLayout>

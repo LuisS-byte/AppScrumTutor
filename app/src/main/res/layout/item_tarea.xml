@@ -21,7 +21,7 @@
             android:id="@+id/tvTitulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/task_title_label"
+            android:text="Título de tarea"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="#043255"/>
@@ -31,7 +31,7 @@
             android:id="@+id/tvDescripcion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/task_description_label"
+            android:text="Descripción"
             android:textColor="#3A4F61"
             android:textSize="13sp"
             android:paddingTop="4dp" />
@@ -48,7 +48,7 @@
                 android:id="@+id/tvFecha"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/task_date_sample"
+                android:text="📅 22/05"
                 android:textSize="12sp"
                 android:textColor="#043255" />
 
@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:text="@string/task_priority_normal"
+                android:text="● Normal"
                 android:textSize="12sp"
                 android:textColor="#0A84FF" />
 
@@ -66,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:text="@string/task_responsible_label"
+                android:text="👤 Responsable"
                 android:textSize="12sp"
                 android:textColor="#3A4F61" />
         </LinearLayout>
@@ -84,7 +84,7 @@
                 android:id="@+id/btnPendiente"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/status_pending"
+                android:text="Pendiente"
                 android:textSize="12sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#043255"
@@ -94,7 +94,7 @@
                 android:id="@+id/btnProgreso"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/status_in_progress"
+                android:text="Progreso"
                 android:textSize="12sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#0A84FF"
@@ -105,7 +105,7 @@
                 android:id="@+id/btnHecho"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/status_done"
+                android:text="Hecho"
                 android:textSize="12sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#4CAF50"

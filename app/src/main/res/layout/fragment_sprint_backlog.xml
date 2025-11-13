@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/backlog_sprint_title"
+            android:text="Backlog del Sprint"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#043255"
