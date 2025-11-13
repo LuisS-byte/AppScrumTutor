@@ -34,7 +34,7 @@
                 android:id="@+id/tvQuizTitulo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Título del Quiz"
+                android:text="@string/quiz_title"
                 android:textStyle="bold"
                 android:textSize="16sp"/>
 
@@ -42,7 +42,7 @@
                 android:id="@+id/tvQuizDescripcion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Descripción del quiz"
+                android:text="@string/quiz_description"
                 android:textColor="#555"
                 android:textSize="13sp"
                 android:paddingTop="4dp"/>

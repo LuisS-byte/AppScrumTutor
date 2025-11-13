@@ -12,7 +12,7 @@
         android:id="@+id/tvTituloHistoria"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Título de la historia"
+        android:text="@string/story_title_sample"
         android:textStyle="bold"
         android:textSize="16sp"
         android:textColor="#222" />
@@ -21,7 +21,7 @@
         android:id="@+id/tvDescripcionHistoria"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Descripción corta"
+        android:text="@string/story_description_sample"
         android:textSize="14sp"
         android:textColor="#555"
         android:paddingTop="4dp" />
@@ -30,7 +30,7 @@
         android:id="@+id/tvPrioridadHistoria"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Prioridad: Alta"
+        android:text="@string/story_priority_high"
         android:textSize="13sp"
         android:textColor="#1E88E5"
         android:paddingTop="4dp" />

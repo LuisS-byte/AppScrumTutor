@@ -26,7 +26,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="PENDIENTE"
+                android:text="@string/tasks_pending"
                 android:textStyle="bold"
                 android:textSize="17sp"
                 android:textColor="#062B45"
@@ -55,7 +55,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="EN PROGRESO"
+                android:text="@string/tasks_in_progress"
                 android:textStyle="bold"
                 android:textSize="17sp"
                 android:textColor="#062B45"
@@ -84,7 +84,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="HECHO"
+                android:text="@string/tasks_done"
                 android:textStyle="bold"
                 android:textSize="17sp"
                 android:textColor="#062B45"
@@ -103,7 +103,7 @@
             android:id="@+id/btnNuevaTarea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="CREAR NUEVA TAREA"
+            android:text="@string/create_new_task"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             android:backgroundTint="#0A84FF"

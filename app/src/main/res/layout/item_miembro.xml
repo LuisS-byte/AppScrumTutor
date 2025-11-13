@@ -23,7 +23,7 @@
             android:background="#F2F7FA"
             android:padding="6dp"
             android:layout_marginEnd="14dp"
-            android:contentDescription="Avatar" />
+            android:contentDescription="@string/member_avatar_desc" />
 
         <!-- Información del miembro -->
         <LinearLayout
@@ -36,7 +36,7 @@
                 android:id="@+id/tvNombreMiembro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="José Mendoza"
+                android:text="@string/member_name_sample"
                 android:textStyle="bold"
                 android:textColor="#043255"
                 android:textSize="16sp" />
@@ -45,7 +45,7 @@
                 android:id="@+id/tvRolMiembro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rol: Scrum Master"
+                android:text="@string/member_role_sample"
                 android:textColor="#3A4F61"
                 android:textSize="14sp"
                 android:paddingTop="3dp" />
@@ -54,7 +54,7 @@
                 android:id="@+id/tvEstadoMiembro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Activo"
+                android:text="@string/member_status_active"
                 android:textColor="#4CAF50"
                 android:textSize="13sp"
                 android:paddingTop="3dp" />
@@ -65,7 +65,7 @@
             android:id="@+id/btnEliminarMiembro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Eliminar"
+            android:text="@string/member_delete"
             android:textColor="#FFFFFF"
             android:textSize="13sp"
             android:backgroundTint="#D32F2F" />

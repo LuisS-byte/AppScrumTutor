@@ -1,5 +1,98 @@
 <resources>
-    <string name="app_name">AppScrumTutor</string>
+    <!-- Home / Project Detail -->
+    <string name="profile_content_description">Perfil</string>
+    <string name="project_title_sample">Reservation Project</string>
+    <string name="scrum_intro_title">Introducción a Scrum</string>
+    <string name="scrum_intro_description">Aprende qué es Scrum y sus principios</string>
+    <string name="task_title_label">Título de tarea</string>
+    <string name="task_description_label">Descripción</string>
+    <string name="sprint_name_sample">Sprint 1</string>
+    <string name="sprint_status_active">Activo</string>
+    <string name="sprint_dates_sample">16/10 - 31/10</string>
+    <string name="member_avatar_desc">Avatar</string>
+
+    <string name="member_name_sample">José Mendoza</string>
+    <string name="member_role_sample">Rol: Scrum Master</string>
+    <string name="member_status_active">Activo</string>
+
+    <string name="member_delete">Eliminar</string>
+
+    <string name="sprint_view">VER</string>
+    <string name="sprint_edit">EDITAR</string>
+    <string name="quiz_title">Título del quiz</string>
+    <string name="quiz_description">Descripción del quiz</string>
+    <string name="project_item_title">Nombre del proyecto</string>
+    <string name="project_item_description">Descripción corta del proyecto</string>
+    <string name="notification_title">Recordatorio de tarea</string>
+    <string name="notification_message_sample">La tarea Diseñar login vence mañana</string>
+    <string name="notification_date_sample">10/11/2025</string>
+
+    <string name="story_title_sample">Título de la historia</string>
+    <string name="story_description_sample">Descripción corta</string>
+    <string name="story_priority_high">Prioridad: Alta</string>
+    <string name="search_hint">Buscar</string>
+    <string name="profile_desc">Perfil</string>
+
+    <string name="sprints_title">Sprints del proyecto</string>
+
+    <string name="create_new_sprint">CREAR NUEVO SPRINT</string>
+    <string name="manage_project_members">GESTIONAR MIEMBROS DEL PROYECTO</string>
+
+
+    <!-- Reemplazo de emojis -->
+    <string name="project_go">Ir</string>
+    <string name="project_edit">Editar</string>
+    <string name="project_delete">Eliminar</string>
+
+    <string name="sprint_calendar_title">Calendario del Sprint</string>
+    <string name="sprint_calendar_select_date">Selecciona una fecha para ver las tareas programadas.</string>
+
+    <string name="create_story">CREAR HISTORIA</string>
+
+    <string name="stories_unassigned">No asignadas</string>
+    <string name="stories_assigned">Asignadas</string>
+
+    <string name="tasks_pending">PENDIENTE</string>
+    <string name="tasks_in_progress">EN PROGRESO</string>
+    <string name="tasks_done">HECHO</string>
+
+    <string name="create_new_task">CREAR NUEVA TAREA</string>
+
+
+    <!-- Sin emojis, formato limpio -->
+    <string name="task_date_sample">22/05</string>
+    <string name="task_priority_normal">Normal</string>
+    <string name="task_responsible_label">Responsable</string>
+
+    <string name="status_pending">Pendiente</string>
+    <string name="status_in_progress">Progreso</string>
+    <string name="status_done">Hecho</string>
+
+    <string name="backlog_sprint_title">Backlog del Sprint</string>
+
+    <string name="invitation_title">Invitación al proyecto</string>
+    <string name="invitation_project_name_sample">Proyecto X</string>
+
+    <string name="invitation_reject">RECHAZAR</string>
+    <string name="invitation_accept">ACEPTAR</string>
+
+    <string name="edit_profile_title">Editar Perfil</string>
+    <string name="edit_profile_name_hint">Nombre</string>
+
+    <string name="cancel">Cancelar</string>
+    <string name="save">Guardar</string>
+
+    <string name="member_email_hint">Correo del miembro</string>
+    <string name="invite_member">INVITAR</string>
+    <string name="edit_project_title">Editar Proyecto</string>
+
+    <string name="project_name_hint">Nombre del proyecto</string>
+    <string name="project_description_hint">Descripción</string>
+    <string name="project_start_date_hint">Fecha de inicio (YYYY-MM-DD)</string>
+    <string name="project_end_date_hint">Fecha de fin (YYYY-MM-DD)</string>
+
+    <string name="update_project_button">Actualizar Proyecto</string>
+
 
     <string-array name="prioridades">
         <item>Alta</item>

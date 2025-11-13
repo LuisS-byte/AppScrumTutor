@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Calendario del Sprint"
+            android:text="@string/sprint_calendar_title"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#062B45"
@@ -37,7 +37,7 @@
             android:id="@+id/tvEventos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Selecciona una fecha para ver las tareas programadas."
+            android:text="@string/sprint_calendar_select_date"
             android:textColor="#3A4F61"
             android:textSize="15sp"
             android:lineSpacingExtra="2dp"/>
