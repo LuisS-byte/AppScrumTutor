@@ -15,51 +15,32 @@
         android:orientation="vertical"
         android:padding="12dp">
 
-        <!-- Fila superior -->
-        <LinearLayout
+        <!-- Fila superior: título -->
+        <TextView
+            android:id="@+id/tvTitulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <CheckBox
-                android:id="@+id/cbCompletado"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false" />
-
-            <TextView
-                android:id="@+id/tvTitulo"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Diseñar login"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:paddingStart="8dp" />
-        </LinearLayout>
+            android:text="Título de tarea"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
         <!-- Descripción -->
         <TextView
             android:id="@+id/tvDescripcion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Diseñar la pantalla de login en XML"
+            android:text="Descripción"
             android:textColor="#666"
             android:textSize="13sp"
-            android:paddingTop="4dp"
-            android:paddingStart="32dp"
-            android:paddingEnd="8dp" />
+            android:paddingTop="4dp" />
 
-        <!-- Detalles: fecha, prioridad, responsable -->
+        <!-- Detalles -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingTop="6dp"
-            android:paddingStart="32dp"
-            android:paddingEnd="8dp">
+            android:paddingTop="6dp">
 
             <TextView
                 android:id="@+id/tvFecha"
@@ -74,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:text="🔵 Alta"
+                android:text="🔵 Normal"
                 android:textSize="12sp"
                 android:textColor="#1976D2" />
 
@@ -83,9 +64,45 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:text="👤 José"
+                android:text="👤 Responsable"
                 android:textSize="12sp"
                 android:textColor="#555" />
+        </LinearLayout>
+
+        <!-- Botones de acción -->
+        <LinearLayout
+            android:id="@+id/layoutAcciones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:paddingTop="8dp">
+
+            <Button
+                android:id="@+id/btnPendiente"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pendiente"
+                android:textSize="12sp"
+                android:padding="4dp" />
+
+            <Button
+                android:id="@+id/btnProgreso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Progreso"
+                android:textSize="12sp"
+                android:padding="4dp"
+                android:layout_marginStart="6dp" />
+
+            <Button
+                android:id="@+id/btnHecho"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hecho"
+                android:textSize="12sp"
+                android:padding="4dp"
+                android:layout_marginStart="6dp" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

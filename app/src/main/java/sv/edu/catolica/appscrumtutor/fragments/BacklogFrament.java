@@ -29,7 +29,10 @@ import sv.edu.catolica.appscrumtutor.sprint.HistoriaService;
 
 public class BacklogFrament extends Fragment {
 
-    private LinearLayout  layoutBacklogTareas;
+
+    private LinearLayout layoutNoAsignadas;
+    private LinearLayout layoutAsignadas;
+
     private Button btnCrearHistoria;
     private long idProyecto = -1;
 
@@ -48,7 +51,9 @@ public class BacklogFrament extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        layoutBacklogTareas = view.findViewById(R.id.layoutBacklogTareas);
+        layoutNoAsignadas = view.findViewById(R.id.layoutNoAsignadas);
+        layoutAsignadas = view.findViewById(R.id.layoutAsignadas);
+
         btnCrearHistoria = view.findViewById(R.id.btnCrearHistoria);
 
         if (getArguments() != null) {
@@ -77,11 +82,16 @@ public class BacklogFrament extends Fragment {
             public void onResponse(Call<List<Historia>> call, Response<List<Historia>> response) {
                 if (!isAdded()) return;
 
-                layoutBacklogTareas.removeAllViews();
+                layoutNoAsignadas.removeAllViews();
+                layoutAsignadas.removeAllViews();
 
                 if (response.isSuccessful() && response.body() != null) {
                     for (Historia h : response.body()) {
-                        agregarHistoria(h);
+                        if (h.getIdSprint() == null) {
+                            agregarHistoriaNoAsignada(h);
+                        } else {
+                            agregarHistoriaAsignada(h);
+                        }
                     }
                 }
             }
@@ -94,34 +104,46 @@ public class BacklogFrament extends Fragment {
         });
     }
 
-    private void agregarHistoria(Historia historia) {
+    private void agregarHistoriaNoAsignada(Historia historia) {
+        View view = LayoutInflater.from(getContext())
+                .inflate(R.layout.item_historia, layoutNoAsignadas, false);
 
-        View historiaView = LayoutInflater.from(getContext())
-                .inflate(R.layout.item_historia, layoutBacklogTareas, false);
-
-        TextView tvTitulo = historiaView.findViewById(R.id.tvTituloHistoria);
-        TextView tvDescripcion = historiaView.findViewById(R.id.tvDescripcionHistoria);
-        TextView tvPrioridad = historiaView.findViewById(R.id.tvPrioridadHistoria);
+        TextView tvTitulo = view.findViewById(R.id.tvTituloHistoria);
+        TextView tvDescripcion = view.findViewById(R.id.tvDescripcionHistoria);
+        TextView tvPrioridad = view.findViewById(R.id.tvPrioridadHistoria);
 
         tvTitulo.setText(historia.getTitulo());
         tvDescripcion.setText(historia.getDescripcion());
         tvPrioridad.setText("Prioridad: " + historia.getPrioridad());
 
-        historiaView.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), DetalleHistoriasActivity.class);
-            intent.putExtra("idHistoria", historia.getId());
-            intent.putExtra("idProyecto", idProyecto);
-            intent.putExtra("idSprint", historia.getIdSprint()); // si existe
+        view.setOnClickListener(v -> abrirDetalle(historia));
 
-            intent.putExtra("titulo", historia.getTitulo());
-            intent.putExtra("descripcion", historia.getDescripcion());
-            intent.putExtra("prioridad", historia.getPrioridad());
-            intent.putExtra("estado", historia.getEstado());
-            intent.putExtra("criterios", historia.getCriteriosAceptacion());
-            startActivity(intent);
-        });
+        layoutNoAsignadas.addView(view);
+    }
 
-        layoutBacklogTareas.addView(historiaView);
+    private void agregarHistoriaAsignada(Historia historia) {
+        View view = LayoutInflater.from(getContext())
+                .inflate(R.layout.item_historia, layoutAsignadas, false);
+
+        TextView tvTitulo = view.findViewById(R.id.tvTituloHistoria);
+        TextView tvDescripcion = view.findViewById(R.id.tvDescripcionHistoria);
+        TextView tvPrioridad = view.findViewById(R.id.tvPrioridadHistoria);
+
+        tvTitulo.setText(historia.getTitulo());
+        tvDescripcion.setText(historia.getDescripcion());
+        tvPrioridad.setText("Sprint #" + historia.getIdSprint());
+
+        view.setOnClickListener(v -> abrirDetalle(historia));
+
+        layoutAsignadas.addView(view);
+    }
+
+    private void abrirDetalle(Historia historia) {
+        Intent intent = new Intent(getActivity(), DetalleHistoriasActivity.class);
+        intent.putExtra("idHistoria", historia.getId());
+        intent.putExtra("idProyecto", idProyecto);
+        intent.putExtra("idSprint", historia.getIdSprint());
+        startActivity(intent);
     }
 
     @Override

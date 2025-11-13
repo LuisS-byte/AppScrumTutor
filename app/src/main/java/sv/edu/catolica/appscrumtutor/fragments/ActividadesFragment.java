@@ -13,10 +13,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,6 +30,7 @@ import sv.edu.catolica.appscrumtutor.R;
 import sv.edu.catolica.appscrumtutor.network.ApiClient;
 import sv.edu.catolica.appscrumtutor.sprint.Tarea;
 import sv.edu.catolica.appscrumtutor.sprint.TareaService;
+import sv.edu.catolica.appscrumtutor.sprint.TareaUpdateDTO;
 
 public class ActividadesFragment extends Fragment {
 
@@ -35,6 +39,9 @@ public class ActividadesFragment extends Fragment {
     private Button btnNuevaTarea;
 
     private long idProyecto;
+
+    private Map<Integer, Tarea> tareasCache = new HashMap<>();
+
     private long idSprint;
 
     public ActividadesFragment() { /* constructor vacío */ }
@@ -69,27 +76,40 @@ public class ActividadesFragment extends Fragment {
 
         return view;
     }
-
     private void cargarTareasDesdeBackend() {
+
         TareaService service = ApiClient.getClient(getContext()).create(TareaService.class);
 
         service.listarPorSprint(idSprint).enqueue(new Callback<List<Tarea>>() {
             @Override
             public void onResponse(Call<List<Tarea>> call, Response<List<Tarea>> response) {
+
                 if (!isAdded()) return;
 
                 if (response.isSuccessful() && response.body() != null) {
+
+                    tareasCache.clear();
 
                     layoutPendiente.removeAllViews();
                     layoutEnProgreso.removeAllViews();
                     layoutHecho.removeAllViews();
 
                     for (Tarea t : response.body()) {
+
+                        tareasCache.put(t.getId(), t);
+
                         switch (t.getIdEstado()) {
-                            case 1: agregarTarea(layoutPendiente, t); break;
-                            case 2: agregarTarea(layoutEnProgreso, t); break;
-                            case 3: agregarTarea(layoutHecho, t); break;
-                            default: agregarTarea(layoutPendiente, t);
+                            case 1:
+                                agregarTarea(layoutPendiente, t);
+                                break;
+                            case 2:
+                                agregarTarea(layoutEnProgreso, t);
+                                break;
+                            case 3:
+                                agregarTarea(layoutHecho, t);
+                                break;
+                            default:
+                                agregarTarea(layoutPendiente, t);
                         }
                     }
 
@@ -101,8 +121,7 @@ public class ActividadesFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Tarea>> call, Throwable t) {
                 if (!isAdded()) return;
-                Toast.makeText(getContext(), "Error: " + t.getMessage(),
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -116,21 +135,76 @@ public class ActividadesFragment extends Fragment {
         TextView tvFecha = tareaView.findViewById(R.id.tvFecha);
         TextView tvPrioridad = tareaView.findViewById(R.id.tvPrioridad);
         TextView tvResponsable = tareaView.findViewById(R.id.tvResponsable);
-        CheckBox cbCompletado = tareaView.findViewById(R.id.cbCompletado);
+
+
+        Button btnPendiente = tareaView.findViewById(R.id.btnPendiente);
+        Button btnProgreso = tareaView.findViewById(R.id.btnProgreso);
+        Button btnHecho = tareaView.findViewById(R.id.btnHecho);
+
+        // Estados
+        btnPendiente.setOnClickListener(v -> confirmarCambioEstado(tarea.getId(), 1, "Pendiente"));
+        btnProgreso.setOnClickListener(v -> confirmarCambioEstado(tarea.getId(), 2, "En progreso"));
+        btnHecho.setOnClickListener(v -> confirmarCambioEstado(tarea.getId(), 3, "Hecho"));
 
         tvTitulo.setText(tarea.getTitulo());
         tvDescripcion.setText(tarea.getDescripcion());
         tvFecha.setText("📅 " + (tarea.getFechaLimite() != null ? tarea.getFechaLimite() : "N/A"));
-        tvPrioridad.setText("🔵 Normal"); // si agregas prioridad la cambiamos
+        tvPrioridad.setText("🔵 Normal");
         tvResponsable.setText("👤 " + (tarea.getAsignadoANombre() != null ? tarea.getAsignadoANombre() : "Sin asignar"));
 
         tareaView.setOnClickListener(v -> {
             Intent i = new Intent(getActivity(), DetalleTareaActivity.class);
             i.putExtra("idTarea", tarea.getId());
+            i.putExtra("idProyecto", idProyecto);
+            i.putExtra("idSprint", idSprint);
             startActivity(i);
         });
 
         contenedor.addView(tareaView);
     }
 
+    private void confirmarCambioEstado(int idTarea, int nuevoEstado, String nombreEstado) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Cambiar estado")
+                .setMessage("¿Mover la tarea a: " + nombreEstado + "?")
+                .setPositiveButton("Sí", (dialog, which) -> cambiarEstado(idTarea, nuevoEstado))
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void cambiarEstado(int idTarea, int nuevoEstado) {
+
+        Tarea tareaActual = tareasCache.get(idTarea);
+
+        TareaUpdateDTO dto = new TareaUpdateDTO(
+                tareaActual.getIdHistoria(),
+                tareaActual.getTitulo(),
+                tareaActual.getDescripcion(),
+                nuevoEstado,
+                tareaActual.getFechaLimite(),
+                tareaActual.getIdAsignadoA()
+        );
+
+        TareaService api = ApiClient.getClient(getContext()).create(TareaService.class);
+
+        api.actualizar(idTarea, dto).enqueue(new Callback<Tarea>() {
+            @Override
+            public void onResponse(Call<Tarea> call, Response<Tarea> response) {
+                if (response.isSuccessful()) {
+                    cargarTareasDesdeBackend();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Tarea> call, Throwable t) {
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        cargarTareasDesdeBackend();
+    }
 }

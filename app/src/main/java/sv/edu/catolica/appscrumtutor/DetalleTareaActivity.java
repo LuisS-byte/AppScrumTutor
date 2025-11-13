@@ -9,10 +9,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import sv.edu.catolica.appscrumtutor.network.ApiClient;
+import sv.edu.catolica.appscrumtutor.sprint.Tarea;
+import sv.edu.catolica.appscrumtutor.sprint.TareaService;
 
 public class DetalleTareaActivity extends AppCompatActivity {
 
@@ -20,6 +28,8 @@ public class DetalleTareaActivity extends AppCompatActivity {
     private LinearLayout layoutComentarios;
     private EditText etNuevoComentario;
     private Button btnAgregarComentario, btnEditar, btnEliminar;
+
+    private int idTarea;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +54,13 @@ public class DetalleTareaActivity extends AppCompatActivity {
                     return insets;
                 });
 
+        idTarea = getIntent().getIntExtra("idTarea", -1);
+        if (idTarea == -1) {
+            Toast.makeText(this, "Error: tarea inválida", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
-        // Referencias
         tvTitulo = findViewById(R.id.tvTituloTarea);
         tvDescripcion = findViewById(R.id.tvDescripcionTarea);
         tvResponsable = findViewById(R.id.tvResponsable);
@@ -59,61 +74,95 @@ public class DetalleTareaActivity extends AppCompatActivity {
         btnEditar = findViewById(R.id.btnEditarTarea);
         btnEliminar = findViewById(R.id.btnEliminarTarea);
 
+        cargarDetalle();
 
-        // === Cargar datos del intent (mock o reales) ===
-        String titulo = getIntent().getStringExtra("titulo");
-        String descripcion = getIntent().getStringExtra("descripcion");
-        String responsable = getIntent().getStringExtra("responsable");
-        String estado = getIntent().getStringExtra("estado");
-        String fecha = getIntent().getStringExtra("fecha");
+        btnEditar.setOnClickListener(v -> irAEditar());
 
-
-        tvTitulo.setText(titulo != null ? titulo : "Diseñar login");
-        tvDescripcion.setText(descripcion != null ? descripcion : "Crear la interfaz XML y conectar con el backend");
-        tvResponsable.setText("👤 Asignado a: " + (responsable != null ? responsable : "José"));
-        tvEstado.setText("📌 Estado: " + (estado != null ? estado : "En Progreso"));
-        tvFechaLimite.setText("📅 Fecha límite: " + (fecha != null ? fecha : "2025-11-15"));
-        tvHistoria.setText("🧩 Historia: Módulo de autenticación");
-        tvSprint.setText("🏁 Sprint 1");
-
-        // === Botones principales ===
-        btnEditar.setOnClickListener(v -> {
-            Intent intent = new Intent(this, CrearTareaActivity.class);
-            intent.putExtra("modo", "editar");
-            intent.putExtra("titulo", titulo);
-            intent.putExtra("descripcion", descripcion);
-            intent.putExtra("fecha", fecha);
-            intent.putExtra("responsable", responsable);
-            startActivity(intent);
-        });
-        // Botones de acción (simulados)
-
-        btnEliminar.setOnClickListener(v -> Toast.makeText(this, "Eliminar tarea (mock)", Toast.LENGTH_SHORT).show());
+        btnEliminar.setOnClickListener(v -> confirmarEliminar());
 
         btnAgregarComentario.setOnClickListener(v -> {
-            String comentario = etNuevoComentario.getText().toString().trim();
-            if (comentario.isEmpty()) {
+            String txt = etNuevoComentario.getText().toString().trim();
+            if (txt.isEmpty()) {
                 Toast.makeText(this, "Comentario vacío", Toast.LENGTH_SHORT).show();
                 return;
             }
-            agregarComentario("Tú", comentario);
+            agregarComentario("Tú", txt);
             etNuevoComentario.setText("");
         });
-
-
-
-
-
     }
 
+    private void cargarDetalle() {
+        TareaService api = ApiClient.getClient(this).create(TareaService.class);
 
-    /** Agrega visualmente un comentario al contenedor */
+        api.detalle(idTarea).enqueue(new Callback<Tarea>() {
+            @Override
+            public void onResponse(Call<Tarea> call, Response<Tarea> response) {
+                if (!response.isSuccessful() || response.body() == null) {
+                    Toast.makeText(DetalleTareaActivity.this, "No se pudo cargar tarea", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Tarea t = response.body();
+                tvTitulo.setText(t.getTitulo());
+                tvDescripcion.setText(t.getDescripcion());
+                tvResponsable.setText("👤 Asignado a: " + (t.getAsignadoANombre() != null ? t.getAsignadoANombre() : "Sin asignar"));
+                tvEstado.setText("📌 Estado: " + t.getEstado());
+                tvFechaLimite.setText("📅 Fecha límite: " + (t.getFechaLimite() != null ? t.getFechaLimite() : "-"));
+                tvHistoria.setText("🧩 Historia: " + (t.getIdHistoria() != null ? t.getIdHistoria() : "Ninguna"));
+                tvSprint.setText("🏁 Sprint: " + (t.getIdSprint() != null ? t.getIdSprint() : "-"));
+            }
+
+            @Override
+            public void onFailure(Call<Tarea> call, Throwable t) {
+                Toast.makeText(DetalleTareaActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void irAEditar() {
+        Intent intent = new Intent(this, CrearTareaActivity.class);
+        intent.putExtra("modo", "editar");
+        intent.putExtra("idTarea", idTarea);
+        intent.putExtra("idProyecto", getIntent().getLongExtra("idProyecto", -1));
+        intent.putExtra("idSprint", getIntent().getLongExtra("idSprint", -1));
+        startActivity(intent);
+    }
+
+    private void confirmarEliminar() {
+        new AlertDialog.Builder(this)
+                .setTitle("Eliminar tarea")
+                .setMessage("¿Seguro que deseas eliminar esta tarea?")
+                .setPositiveButton("Sí", (d, w) -> eliminar())
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void eliminar() {
+        TareaService api = ApiClient.getClient(this).create(TareaService.class);
+
+        api.eliminar(idTarea).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(DetalleTareaActivity.this, "Tarea eliminada", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(DetalleTareaActivity.this, "No se pudo eliminar", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(DetalleTareaActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void agregarComentario(String usuario, String texto) {
-        TextView comentarioView = new TextView(this);
-        comentarioView.setText("💬 " + usuario + ": " + texto);
-        comentarioView.setPadding(0, 8, 0, 8);
-        comentarioView.setTextColor(0xFF333333);
-        layoutComentarios.addView(comentarioView);
+        TextView tv = new TextView(this);
+        tv.setText("💬 " + usuario + ": " + texto);
+        tv.setPadding(0, 8, 0, 8);
+        tv.setTextColor(0xFF333333);
+        layoutComentarios.addView(tv);
     }
-
 }

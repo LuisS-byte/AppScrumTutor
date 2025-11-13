@@ -2,6 +2,7 @@ package sv.edu.catolica.appscrumtutor;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -13,14 +14,34 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import sv.edu.catolica.appscrumtutor.network.ApiClient;
+import sv.edu.catolica.appscrumtutor.sprint.ProyectoMiembroDto;
+import sv.edu.catolica.appscrumtutor.sprint.ProyectoMiembroService;
+import sv.edu.catolica.appscrumtutor.sprint.Tarea;
+import sv.edu.catolica.appscrumtutor.sprint.TareaCreateDTO;
+import sv.edu.catolica.appscrumtutor.sprint.TareaService;
+import sv.edu.catolica.appscrumtutor.sprint.TareaUpdateDTO;
 
 public class CrearTareaActivity extends AppCompatActivity {
     private EditText etTituloTarea, etDescripcionTarea, etFechaLimite;
-    private Spinner spEstadoTarea;
+    private Spinner spEstadoTarea, spResponsable;
     private Button btnGuardarTarea;
-    private String modo; // "crear" o "editar"
+
+    private long idProyecto;
+    private long idTareaEditar = -1;
+    private boolean esEdicion = false;
+    private long idSprint;
+
+    private List<ProyectoMiembroDto> listaMiembros = new ArrayList<>();
+    private List<String> nombresMiembros = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,75 +55,212 @@ public class CrearTareaActivity extends AppCompatActivity {
 
         etTituloTarea = findViewById(R.id.etTituloTarea);
         etDescripcionTarea = findViewById(R.id.etDescripcionTarea);
-
-        spEstadoTarea = findViewById(R.id.spEstadoTarea);
-        btnGuardarTarea = findViewById(R.id.btnGuardarTarea);
         etFechaLimite = findViewById(R.id.etFechaLimite);
+        spEstadoTarea = findViewById(R.id.spEstadoTarea);
+        spResponsable = findViewById(R.id.spResponsable);
+        btnGuardarTarea = findViewById(R.id.btnGuardarTarea);
 
-        etFechaLimite.setFocusable(false); // Evita teclado
-        etFechaLimite.setOnClickListener(v -> mostrarDatePicker());
+        idProyecto = getIntent().getLongExtra("idProyecto", -1);
+        idSprint = getIntent().getLongExtra("idSprint", -1);
 
-        // === Detectar modo ===
-        modo = getIntent().getStringExtra("modo");
-        if (modo == null) modo = "crear";
+        idTareaEditar = getIntent().getIntExtra("idTarea", -1);
+        esEdicion = idTareaEditar != -1;
 
-        if (modo.equals("editar")) {
-            precargarDatos();
+        configurarFecha();
+        cargarMiembrosProyecto();
+
+        if (esEdicion) {
+            btnGuardarTarea.setText("Actualizar tarea");
+
         }
 
 
+
+
+        btnGuardarTarea.setOnClickListener(v ->{if (esEdicion) actualizar();
+        else crear();
+    });
+
+
+    } private void configurarFecha() {
+        etFechaLimite.setFocusable(false);
+        etFechaLimite.setOnClickListener(view -> mostrarDatePicker());
     }
-    /** Muestra el selector de fecha y coloca el resultado en el campo */
+
     private void mostrarDatePicker() {
-        final Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        Calendar c = Calendar.getInstance();
+        int y = c.get(Calendar.YEAR);
+        int m = c.get(Calendar.MONTH);
+        int d = c.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePicker = new DatePickerDialog(
-                this,
-                (view, selectedYear, selectedMonth, selectedDay) -> {
-                    String fecha = String.format(Locale.getDefault(),
-                            "%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay);
-                    etFechaLimite.setText(fecha);
-                },
-                year, month, day
-        );
-        datePicker.show();
+        DatePickerDialog dlg = new DatePickerDialog(this, (view, year, month, day) -> {
+            String fecha = String.format(Locale.getDefault(), "%04d-%02d-%02d",
+                    year, month + 1, day);
+            etFechaLimite.setText(fecha);
+        }, y, m, d);
+
+        dlg.show();
+    }
+    private void cargarMiembrosProyecto() {
+        ProyectoMiembroService service =
+                ApiClient.getClient(this).create(ProyectoMiembroService.class);
+
+        service.listar(idProyecto).enqueue(new Callback<List<ProyectoMiembroDto>>() {
+            @Override
+            public void onResponse(Call<List<ProyectoMiembroDto>> call,
+                                   Response<List<ProyectoMiembroDto>> response) {
+
+                if (!response.isSuccessful() || response.body() == null) return;
+
+                listaMiembros.clear();
+                nombresMiembros.clear();
+
+                for (ProyectoMiembroDto m : response.body()) {
+                    listaMiembros.add(m);
+                    nombresMiembros.add(m.getUsuarioNombre());
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                        CrearTareaActivity.this,
+                        android.R.layout.simple_spinner_dropdown_item,
+                        nombresMiembros
+                );
+
+                spResponsable.setAdapter(adapter);
+
+                // ←──────── IMPORTANTE
+                // SI ES EDICIÓN → CARGAR LOS DATOS SOLO DESPUÉS DE CARGAR MIEMBROS
+                if (esEdicion) {
+                    cargarDatosParaEditar();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProyectoMiembroDto>> call, Throwable t) {
+                Toast.makeText(CrearTareaActivity.this,
+                        "Error cargando miembros: " + t.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    /** Si viene del detalle, precarga los campos */
-    private void precargarDatos() {
-        String titulo = getIntent().getStringExtra("titulo");
-        String descripcion = getIntent().getStringExtra("descripcion");
-        String fecha = getIntent().getStringExtra("fecha");
+    private void cargarDatosParaEditar() {
+        TareaService api = ApiClient.getClient(this).create(TareaService.class);
 
-        etTituloTarea.setText(titulo != null ? titulo : "");
-        etDescripcionTarea.setText(descripcion != null ? descripcion : "");
-        etFechaLimite.setText(fecha != null ? fecha : "");
+        api.detalle(idTareaEditar).enqueue(new Callback<Tarea>() {
+            @Override
+            public void onResponse(Call<Tarea> call, Response<Tarea> response) {
+                if (!response.isSuccessful() || response.body() == null) return;
 
-        btnGuardarTarea.setText("Actualizar tarea");
+                Tarea t = response.body();
+
+                etTituloTarea.setText(t.getTitulo());
+                etDescripcionTarea.setText(t.getDescripcion());
+                etFechaLimite.setText(t.getFechaLimite());
+
+                spEstadoTarea.setSelection(t.getIdEstado() - 1);
+
+                if (t.getIdAsignadoA() != null) {
+                    for (int i = 0; i < listaMiembros.size(); i++) {
+                        if (listaMiembros.get(i).getIdUsuario().equals(t.getIdAsignadoA())) {
+                            spResponsable.setSelection(i);
+                            break;
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<Tarea> call, Throwable t) {
+                Toast.makeText(CrearTareaActivity.this, "Error cargando tarea", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
-
-    /** Guarda o actualiza la tarea según el modo */
-    private void guardarTarea() {
+    private void crear() {
         String titulo = etTituloTarea.getText().toString().trim();
-        String desc = etDescripcionTarea.getText().toString().trim();
-        String fecha = etFechaLimite.getText().toString().trim();
-
         if (titulo.isEmpty()) {
             Toast.makeText(this, "Título requerido", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (modo.equals("editar")) {
-            Toast.makeText(this, "Tarea actualizada (mock): " + titulo, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Tarea creada (mock): " + titulo, Toast.LENGTH_SHORT).show();
-        }
+        String desc = etDescripcionTarea.getText().toString().trim();
+        String fecha = etFechaLimite.getText().toString().trim();
+        int estado = spEstadoTarea.getSelectedItemPosition() + 1;
 
-        finish();
+        Long idAsignado = listaMiembros.isEmpty()
+                ? null
+                : listaMiembros.get(spResponsable.getSelectedItemPosition()).getIdUsuario();
+
+        TareaCreateDTO dto = new TareaCreateDTO(
+                (int) idSprint,
+                null,
+                titulo,
+                desc,
+                estado,
+                fecha.isEmpty() ? null : fecha,
+                idAsignado
+        );
+
+        TareaService api = ApiClient.getClient(this).create(TareaService.class);
+
+        api.crear(dto).enqueue(new Callback<Tarea>() {
+            @Override
+            public void onResponse(Call<Tarea> call, Response<Tarea> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(CrearTareaActivity.this, "Tarea creada", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(CrearTareaActivity.this, "Error al crear", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Tarea> call, Throwable t) {
+                Toast.makeText(CrearTareaActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
+    private void actualizar() {
+        String titulo = etTituloTarea.getText().toString().trim();
+        if (titulo.isEmpty()) {
+            Toast.makeText(this, "Título requerido", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+        String desc = etDescripcionTarea.getText().toString().trim();
+        String fecha = etFechaLimite.getText().toString().trim();
+        int estado = spEstadoTarea.getSelectedItemPosition() + 1;
+
+        Long idAsignado = listaMiembros.isEmpty()
+                ? null
+                : listaMiembros.get(spResponsable.getSelectedItemPosition()).getIdUsuario();
+
+        TareaUpdateDTO dto = new TareaUpdateDTO(
+                null,
+                titulo,
+                desc,
+                estado,
+                fecha.isEmpty() ? null : fecha,
+                idAsignado
+        );
+
+        TareaService api = ApiClient.getClient(this).create(TareaService.class);
+
+        api.actualizar(idTareaEditar, dto).enqueue(new Callback<Tarea>() {
+            @Override
+            public void onResponse(Call<Tarea> call, Response<Tarea> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(CrearTareaActivity.this, "Tarea actualizada", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(CrearTareaActivity.this, "Error al actualizar", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Tarea> call, Throwable t) {
+                Toast.makeText(CrearTareaActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
